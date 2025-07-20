@@ -416,3 +416,6 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Exclude all Fusesoc build files
+src/rtl/linear-feedback-shift-register/build
