@@ -2,4 +2,32 @@ CAPI=2:
 name: "pcie:physical:encoders:0.1"
 description: "Encoders implementing the 3b4b, 5b6b and 8b10b line encoding schemes"
 
+filesets:
+  files_rtl:
+    files:
+      - encoder_3b4b.sv
+      - encoder_5b6b.sv
+      - encoder_8b10b.sv
+    file_type: systemVerilogSource
+  files_icarus:
+    files:
+      - tb_encoder_8b10b.sv
+    file_type: systemVerilogSource
+
+targets:
+  default: &default_target
+    filesets:
+      - files_rtl
+
+  icarus_sim:
+    <<: *default_target
+    filesets_append:
+      - files_icarus
+    default_tool: icarus
+    toplevel: tb_encoder_8b10b
+    tools:
+      icarus:
+        iverilog_options:
+          - -g2012
+          - -D ICARUS=1
 
