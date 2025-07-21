@@ -57,7 +57,7 @@ module encoder_8b10b (
   ////////////////////////////////////
 
   // [H,G,F]
-  assign encoder3b4b_data_in = { data_i[7],
+  assign encoder_3b4b_data_in = { data_i[7],
                                  data_i[6],
                                  data_i[5]
                                  };
