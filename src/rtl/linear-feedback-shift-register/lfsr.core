@@ -1,68 +1,26 @@
 CAPI=2:
-name: pcie:lfsr:linear_feedback_shift_reg
-description: "Implementation of Physical Logical layer PCI Express Base Specification Revision 5.0 Version 1.0"
+name: "pcie:physical:lfsr"
+description: "Implementation of linear feedback shift register"
 
 filesets:
   files_rtl:
     files:
       - linear_feedback_shift_reg.sv
+    file_type: systemVerilogSource
+  files_icarus:
+    files:
       - tb_lfsr.sv
     file_type: systemVerilogSource
 
 targets:
-
   default: &default_target
     filesets:
       - files_rtl
 
-
-  synth:
-    <<: *default_target
-    default_tool: vivado
-    toplevel: linear_feedback_shift_reg
-    tools:
-      vivado:
-        part: "xc7a35tcsg324-1"  # Default to Arty A7-35
-    parameters:
-      - SRAMInitFile
-      - PRIM_DEFAULT_IMPL=prim_pkg::ImplXilinx
-    flags:
-      use_bscane_tap: true
-
-  sim:
-    <<: *default_target
-    default_tool: verilator
-#    filesets_append:
-#      - files_verilator
-    toplevel: linear_feedback_shift_reg
-    tools:
-      verilator:
-        mode: cc
-        verilator_options:
-          # Disabling tracing reduces compile times but doesn't have a
-          # huge influence on runtime performance.
-          - '--trace'
-          - '--trace-fst' # this requires -DVM_TRACE_FMT_FST in CFLAGS below!
-          - '--trace-structs'
-          - '--trace-params'
-          - '--trace-max-array 1024'
-          - '-CFLAGS "-std=c++14 -Wall -DVM_TRACE_FMT_FST -DTOPLEVEL_NAME=top_verilator"'
-          - '-LDFLAGS "-pthread -lutil -lelf"'
-          - "-Wall"
-          - "-Wwarn-IMPERFECTSCH"
-          # RAM primitives wider than 64bit (required for ECC) fail to build in
-          # Verilator without increasing the unroll count (see Verilator#1266)
-          - "--unroll-count 72"
-    parameters:
-      - PRIM_DEFAULT_IMPL=prim_pkg::ImplGeneric
-
-
-
-  # Icarus sim will not be able to compile the Ibex System Verilog code
-  # As some system verilog features are not supported
-
   icarus_sim:
     <<: *default_target
+    filesets_append:
+      - files_icarus
     default_tool: icarus
     toplevel: tb_lfsr
     tools:
@@ -70,14 +28,4 @@ targets:
         iverilog_options:
           - -g2012
           - -D ICARUS=1
-
-  xilinx_sim:
-    <<: *default_target
-    default_tool: xsim
-    toplevel: tb_top
-    tools:
-      xsim:
-        xelab_options:
-          - '-v2'
-          - '-d ICARUS=1'
 
