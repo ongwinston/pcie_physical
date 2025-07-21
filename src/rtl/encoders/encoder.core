@@ -1,0 +1,5 @@
+CAPI=2:
+name: "pcie:physical:encoders:0.1"
+description: "Encoders implementing the 3b4b, 5b6b and 8b10b line encoding schemes"
+
+
