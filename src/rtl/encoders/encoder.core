@@ -8,7 +8,12 @@ filesets:
       - encoder_3b4b.sv
       - encoder_5b6b.sv
       - encoder_8b10b.sv
+      - disparity_checker.sv
     file_type: systemVerilogSource
+  files_mem:
+    files:
+      - data_symbols_5b6b.mem
+    file_type: user
   files_icarus:
     files:
       - tb_encoder_8b10b.sv
@@ -23,7 +28,10 @@ targets:
     <<: *default_target
     filesets_append:
       - files_icarus
+      - files_mem
     default_tool: icarus
+    parameters:
+      - Encoder_5b6bInitFile
     toplevel: tb_encoder_8b10b
     tools:
       icarus:
@@ -31,3 +39,37 @@ targets:
           - -g2012
           - -D ICARUS=1
 
+
+
+  xilinx_sim:
+    <<: *default_target
+    default_tool: xsim
+    filesets_append:
+      - files_icarus
+      - files_mem
+    parameters:
+      - Encoder_5b6bInitFile
+    toplevel: tb_encoder_8b10b
+    tools:
+      xsim:
+        xelab_options:
+          - '-v2'
+          - '-d SIMULATOR_ICARUS=1'
+#        xsim_options:
+         #- '--gui'
+         #- '--view'
+
+
+
+parameters:
+  # XXX: This parameter needs to be absolute, or relative to the *.runs/synth_1
+  # directory. It's best to pass it as absolute path when invoking fusesoc, e.g.
+  # --SRAMInitFile=$PWD/sw/led/led.vmem
+  # XXX: The VMEM file should be added to the sources of the Vivado project to
+  # make the Vivado dependency tracking work. However this requires changes to
+  # fusesoc first.
+  Encoder_5b6bInitFile:
+    datatype: str
+    description: LUT initialization file in mem hex format
+    default: "data_symbols_5b6b.mem"
+    paramtype: vlogparam

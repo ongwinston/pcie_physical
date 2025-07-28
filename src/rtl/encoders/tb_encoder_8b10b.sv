@@ -1,14 +1,18 @@
-`timescale 1ns/1ps
+// `timescale 1ns/1ps
 
 
-module tb_encoder_8b10b();
+module tb_encoder_8b10b #(
+    parameter      Encoder_5b6bInitFile   = ""
+  ) (
+
+);
 
 
   logic clk;
   logic reset;
 
   // Debug data_in
-  logic [7:0] data_frame = 8'h01;
+  logic [7:0] data_frame;
   logic [9:0] encoded_symbol;
 
   initial begin
@@ -21,11 +25,21 @@ module tb_encoder_8b10b();
     #10 clk = ~clk;
   end
 
+
+  // Counter as the data frame driver
+  always @(posedge clk or posedge reset) begin
+    if(reset) begin
+      data_frame <= 8'h00;
+    end else begin
+      data_frame <= data_frame + 1'b1;
+    end
+  end
+
   encoder_8b10b dut_encoder_8b10b (
-    .clk      (clk),
-    .reset    (reset),
-    .data_i   (data_frame),
-    .symbol_o (encoded_symbol)
+    .clk           (clk),
+    .reset         (reset),
+    .data_i        (data_frame),
+    .encoded_8b10b (encoded_symbol)
   );
 
 
@@ -46,6 +60,6 @@ module tb_encoder_8b10b();
 
 
   initial begin
-    #1000 $finish();
+    #1ms $finish();
   end
 endmodule
