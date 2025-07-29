@@ -11,7 +11,7 @@ module encoder_3b4b (
   logic [3:0] encoded_symbol;
 
   always_comb begin
-    case(data_i)
+    unique case(data_i)
     3'b000: begin
       if(is_run_disparity_n_i) encoded_symbol = 4'b0100;
       else encoded_symbol = 4'b1011;

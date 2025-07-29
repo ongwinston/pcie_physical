@@ -37,7 +37,7 @@ module encoder_5b6b #(
   // Work around with some simulators having issues with using readmem
   //----------------------------------------------------
   always_comb begin
-    case(data_i)
+    unique case(data_i)
     5'd0: begin
       if(is_run_disparity_n_i) encoded_symbol = 6'b100111;
       else encoded_symbol = 6'b011000;
