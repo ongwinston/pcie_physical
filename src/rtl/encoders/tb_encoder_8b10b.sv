@@ -36,10 +36,11 @@ module tb_encoder_8b10b #(
   end
 
   encoder_8b10b dut_encoder_8b10b (
-    .clk           (clk),
-    .reset         (reset),
-    .data_i        (data_frame),
-    .encoded_8b10b (encoded_symbol)
+    .clk_i             (clk),
+    .reset_i           (reset),
+    .data_i            (data_frame),
+    .encoded_8b10b_o   (encoded_symbol),
+    .is_special_k_i    (1'b0)
   );
 
 

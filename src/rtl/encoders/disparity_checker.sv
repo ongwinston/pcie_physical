@@ -10,14 +10,14 @@ Symbol in {E,D,C,B,A} = {}
 module disparity_checker #(
   parameter int BITWIDTH = 5
 ) (
-    input logic [BITWIDTH-1:0] symbol_in,
-    output logic disparity_out
+    input logic [BITWIDTH-1:0] symbol_i,
+    output logic disparity_o
  );
 
 
  // XOR the data bits in to check disparity
  // if we are even in disparity then disparity doesnt change
- assign disparity_out = ^symbol_in;
+ assign disparity_o = ^symbol_i;
 
 
 

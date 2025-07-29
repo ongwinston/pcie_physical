@@ -20,11 +20,11 @@ Encoder will insert two Running Disparity bits and rearrange the inputs bit stre
 module encoder_8b10b #(
     parameter      Encoder_5b6bInitFile   = ""
  ) (
-  input logic clk,
-  input logic reset,
-  input logic [7:0] data_i,
-  output logic [9:0] encoded_8b10b,
-  input logic is_special_k
+  input  logic       clk_i,
+  input  logic       reset_i,
+  input  logic [7:0] data_i,
+  output logic [9:0] encoded_8b10b_o,
+  input  logic       is_special_k_i
 
 );
 
@@ -35,8 +35,10 @@ module encoder_8b10b #(
 
   logic [2:0] encoder_3b4b_data_in;
   logic [3:0] encoder_3b4b_symbol_out;
-  logic run_disparity_neg;
-  logic run_disparity_neg_post_5b6b;
+  logic       is_run_disparity_n;
+  logic       post5b6b_run_disparity_n;
+  logic       post3b6b_run_disparity_neg_d, post3b6b_run_disparity_neg_q;
+  logic       is_special_k;
 
   logic [4:0] encoder_5b6b_data_in;
   logic [5:0] encoder_5b6b_symbol_out;
@@ -45,7 +47,7 @@ module encoder_8b10b #(
 
   /////////////////////////////////////////////////////////////
 
-  // assign run_disparity_neg = 1'b1; // TODO: Fix the RD
+  assign is_special_k = is_special_k_i;
 
   ////////////////////////////////////
   // 5b/6b Encoder
@@ -62,13 +64,13 @@ module encoder_8b10b #(
   encoder_5b6b  #(
     .Encoder_5b6bInitFile (Encoder_5b6bInitFile)
   ) encoder_5b6b_inst (
-    .clk                    (clk),
-    .reset                  (reset),
-    .data_in                (encoder_5b6b_data_in),
-    .data_out               (encoder_5b6b_symbol_out),
-    .run_disparity_neg      (run_disparity_neg),
-    .is_special_k           (is_special_k),
-    .run_disparity_neg_post_5b6b (run_disparity_neg_post_5b6b)
+    .clk_i                         (clk_i),
+    .reset_i                       (reset_i),
+    .data_i                        (encoder_5b6b_data_in),
+    .data_o                        (encoder_5b6b_symbol_out),
+    .is_run_disparity_n_i          (is_run_disparity_n),
+    .is_special_k_i                (is_special_k),
+    .post5b6b_run_disparity_n_o    (post5b6b_run_disparity_n)
 
   );
 
@@ -84,20 +86,22 @@ module encoder_8b10b #(
                                  };
 
   encoder_3b4b encoder3b4b_inst (
-    .clk                        (clk),
-    .reset                      (reset),
-    .data_in                    (encoder_3b4b_data_in),
-    .data_out                   (encoder_3b4b_symbol_out),
-    .run_disparity_neg          (run_disparity_neg),
-    .is_special_k               (is_special_k),
-    .run_disparity_neg_post3b4b (run_disparity_neg)
+    .clk_i                         (clk_i),
+    .reset_i                       (reset_i),
+    .data_i                        (encoder_3b4b_data_in),
+    .data_o                        (encoder_3b4b_symbol_out),
+    .is_run_disparity_n_i          (post5b6b_run_disparity_n),
+    .is_special_k_i                (is_special_k),
+    .run_disparity_neg_post3b4b_o  (is_run_disparity_n)
 
   );
 
   assign encoder8b10b_d = {encoder_5b6b_symbol_out, encoder_3b4b_symbol_out};
 
-  always_ff @( posedge clk or posedge reset ) begin
-    if(reset) begin
+
+  // Output Flopped signal
+  always_ff @( posedge clk_i or posedge reset_i ) begin
+    if(reset_i) begin
       encoder8b10b_q <= 10'd0;
     end else begin
       encoder8b10b_q <= encoder8b10b_d;
