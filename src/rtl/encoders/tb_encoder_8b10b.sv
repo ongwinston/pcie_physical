@@ -9,7 +9,7 @@ module tb_encoder_8b10b #(
 
 
   logic clk;
-  logic reset;
+  logic rst;
 
   // Debug data_in
   logic [7:0] data_frame;
@@ -17,8 +17,8 @@ module tb_encoder_8b10b #(
 
   initial begin
     clk = 1'b0;
-    reset = 1'b1;
-    #20 reset = 1'b0;
+    rst = 1'b1;
+    #20 rst = 1'b0;
   end
 
   always begin
@@ -27,8 +27,8 @@ module tb_encoder_8b10b #(
 
 
   // Counter as the data frame driver
-  always @(posedge clk or posedge reset) begin
-    if(reset) begin
+  always @(posedge clk or posedge rst) begin
+    if(rst) begin
       data_frame <= 8'h00;
     end else begin
       data_frame <= data_frame + 1'b1;
@@ -37,7 +37,7 @@ module tb_encoder_8b10b #(
 
   encoder_8b10b dut_encoder_8b10b (
     .clk_i             (clk),
-    .reset_i           (reset),
+    .rst_i             (rst),
     .data_i            (data_frame),
     .encoded_8b10b_o   (encoded_symbol),
     .is_special_k_i    (1'b0)

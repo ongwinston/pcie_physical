@@ -1,6 +1,6 @@
 module encoder_3b4b (
   input               clk_i,
-  input               reset_i,
+  input               rst_i,
   input  logic [2:0]  data_i,
   output logic [3:0]  data_o,
   input  logic        is_run_disparity_n_i,

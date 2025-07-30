@@ -2,7 +2,7 @@ module encoder_5b6b #(
     parameter      Encoder_5b6bInitFile   = ""
   ) (
     input  logic       clk_i,
-    input  logic       reset_i,
+    input  logic       rst_i,
     input  logic [4:0] data_i,
     output logic [5:0] data_o,
     input  logic       is_run_disparity_n_i,
@@ -11,6 +11,8 @@ module encoder_5b6b #(
 );
 
   logic [5:0] encoded_symbol;
+  logic       post5b6b_run_disparity_n;
+  logic       post5b6b_run_disparity_n_d, post5b6b_run_disparity_n_q;
 
 
 `ifdef LUTRAM_8b6b
@@ -157,15 +159,35 @@ module encoder_5b6b #(
 
   end
 
-    assign data_o = encoded_symbol;
+  // Register the output of the encoded symbol
+  // To remove large timing delay from priority encoder multiplexer
+  always_ff @(posedge clk_i or posedge rst_i) begin
+    if(rst_i) begin
+      data_o <= 6'd0;
+    end else begin
+      data_o <= encoded_symbol;
+    end
+  end
+
+
 `endif
 
   disparity_checker  #(
     .BITWIDTH(6)
    ) disp_check_inst (
     .symbol_i     (encoded_symbol),
-    .disparity_o  (post5b6b_run_disparity_n_o)
+    .disparity_o  (post5b6b_run_disparity_n_d)
   );
 
+
+  always_ff @(posedge clk_i or posedge rst_i) begin
+    if(rst_i) begin
+      post5b6b_run_disparity_n_q <= 1'b0;
+    end else begin
+      post5b6b_run_disparity_n_q <= post5b6b_run_disparity_n_d;
+    end
+  end
+
+  assign post5b6b_run_disparity_n_o = post5b6b_run_disparity_n_q;
 
 endmodule

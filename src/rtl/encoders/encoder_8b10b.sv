@@ -21,7 +21,7 @@ module encoder_8b10b #(
     parameter      Encoder_5b6bInitFile   = ""
  ) (
   input  logic       clk_i,
-  input  logic       reset_i,
+  input  logic       rst_i,
   input  logic [7:0] data_i,
   output logic [9:0] encoded_8b10b_o,
   input  logic       is_special_k_i
@@ -65,7 +65,7 @@ module encoder_8b10b #(
     .Encoder_5b6bInitFile (Encoder_5b6bInitFile)
   ) encoder_5b6b_inst (
     .clk_i                         (clk_i),
-    .reset_i                       (reset_i),
+    .rst_i                         (rst_i),
     .data_i                        (encoder_5b6b_data_in),
     .data_o                        (encoder_5b6b_symbol_out),
     .is_run_disparity_n_i          (is_run_disparity_n),
@@ -87,7 +87,7 @@ module encoder_8b10b #(
 
   encoder_3b4b encoder3b4b_inst (
     .clk_i                         (clk_i),
-    .reset_i                       (reset_i),
+    .rst_i                         (rst_i),
     .data_i                        (encoder_3b4b_data_in),
     .data_o                        (encoder_3b4b_symbol_out),
     .is_run_disparity_n_i          (post5b6b_run_disparity_n),
@@ -100,14 +100,14 @@ module encoder_8b10b #(
 
 
   // Output Flopped signal
-  always_ff @( posedge clk_i or posedge reset_i ) begin
-    if(reset_i) begin
+  always_ff @( posedge clk_i or posedge rst_i ) begin
+    if(rst_i) begin
       encoder8b10b_q <= 10'd0;
     end else begin
       encoder8b10b_q <= encoder8b10b_d;
     end
   end
 
-  assign encoded_8b10b = encoder8b10b_q;
+  assign encoded_8b10b_o = encoder8b10b_q;
 
 endmodule
