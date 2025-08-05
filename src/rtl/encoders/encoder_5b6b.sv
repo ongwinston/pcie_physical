@@ -117,11 +117,8 @@ module encoder_5b6b #(
       encoded_symbol = 6'b011010;
     end
     5'd23: begin
-      if(is_run_disparity_n_i) begin
-        encoded_symbol = 6'b111010;
-      end else begin
-        encoded_symbol = 6'b000101;
-      end
+      if(is_run_disparity_n_i) encoded_symbol = 6'b111010;
+      else encoded_symbol = 6'b000101;
     end
     5'd24: begin
       if(is_run_disparity_n_i) encoded_symbol = 6'b110011;
