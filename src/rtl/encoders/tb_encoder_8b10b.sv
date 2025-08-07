@@ -1,4 +1,10 @@
+// 20ns clock - 50MHz
+// 200MHz - 5ns
+`define HALF_CLK_PERIOD 5ns
+
+
 // `timescale 1ns/1ps
+
 
 
 module tb_encoder_8b10b #(
@@ -18,11 +24,11 @@ module tb_encoder_8b10b #(
   initial begin
     clk = 1'b0;
     rst = 1'b1;
-    #20 rst = 1'b0;
+    #`HALF_CLK_PERIOD rst = 1'b0;
   end
 
   always begin
-    #10 clk = ~clk;
+    #`HALF_CLK_PERIOD clk = ~clk;
   end
 
 
@@ -36,11 +42,11 @@ module tb_encoder_8b10b #(
   end
 
   encoder_8b10b dut_encoder_8b10b (
-    .clk_i             (clk),
-    .rst_i             (rst),
-    .data_i            (data_frame),
-    .encoded_8b10b_o   (encoded_symbol),
-    .is_special_k_i    (1'b0)
+    .clk_i                  (clk),
+    .rst_i                  (rst),
+    .data_i                 (data_frame),
+    .encoded_8b10b_symbol_o (encoded_symbol),
+    .is_special_k_i         (1'b0)
   );
 
 
@@ -61,6 +67,6 @@ module tb_encoder_8b10b #(
 
 
   initial begin
-    #1ms $finish();
+    #100us $finish();
   end
 endmodule

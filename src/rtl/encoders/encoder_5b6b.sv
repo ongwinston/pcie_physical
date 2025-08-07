@@ -1,5 +1,13 @@
+/**
+5b6b Encoder implementation which takes a 5 bit data symbol and outputs a 6 bit encoded symbol
+
+ 1 Cycle latency from data input to encoded symbol out
+ 1 Cycle latency for run_disparity out
+
+*/
+
 module encoder_5b6b #(
-    parameter      Encoder_5b6bInitFile   = ""
+    parameter Encoder_5b6bInitFile   = ""
   ) (
     input  logic       clk_i,
     input  logic       rst_i,
@@ -39,118 +47,206 @@ module encoder_5b6b #(
   // Work around with some simulators having issues with using readmem
   //----------------------------------------------------
   always_comb begin
+    encoded_symbol = 6'b000000; // default
+    post5b6b_run_disparity_n = 1'b0; //default
+
     unique case(data_i)
     5'd0: begin
-      if(is_run_disparity_n_i) encoded_symbol = 6'b100111;
-      else encoded_symbol = 6'b011000;
+      if(is_run_disparity_n_i) begin
+        encoded_symbol = 6'b100111;
+        post5b6b_run_disparity_n = 1'b0;
+      end else begin
+        encoded_symbol = 6'b011000;
+        post5b6b_run_disparity_n = 1'b1;
+      end
     end
     5'd1: begin
-      if(is_run_disparity_n_i) encoded_symbol = 6'b011101;
-      else encoded_symbol = 6'b100010;
+      if(is_run_disparity_n_i) begin
+        encoded_symbol = 6'b011101;
+        post5b6b_run_disparity_n = 1'b0;
+      end else begin
+        encoded_symbol = 6'b100010;
+        post5b6b_run_disparity_n = 1'b1;
+      end
     end
     5'd2: begin
       encoded_symbol = 6'b101101;
+      post5b6b_run_disparity_n = is_run_disparity_n_i;
     end
     5'd3: begin
       encoded_symbol = 6'b110001;
+      post5b6b_run_disparity_n = is_run_disparity_n_i;
     end
     5'd4: begin
-      if(is_run_disparity_n_i) encoded_symbol = 6'b110101;
-      else encoded_symbol = 6'b001010;
+      if(is_run_disparity_n_i) begin
+        encoded_symbol = 6'b110101;
+        post5b6b_run_disparity_n = 1'b0;
+      end else begin
+        encoded_symbol = 6'b001010;
+        post5b6b_run_disparity_n = 1'b1;
+      end
     end
     5'd5: begin
       encoded_symbol = 6'b101001;
+      post5b6b_run_disparity_n = is_run_disparity_n_i;
     end
     5'd6: begin
       encoded_symbol = 6'b011001;
+      post5b6b_run_disparity_n = is_run_disparity_n_i;
     end
     5'd7: begin
-      if(is_run_disparity_n_i) encoded_symbol = 6'b111000;
-      else encoded_symbol = 6'b000111;
+      if(is_run_disparity_n_i) begin
+        encoded_symbol = 6'b111000;
+        post5b6b_run_disparity_n = is_run_disparity_n_i;
+      end else begin
+        encoded_symbol = 6'b000111;
+        post5b6b_run_disparity_n = is_run_disparity_n_i;
+      end
     end
     5'd8: begin
-      if(is_run_disparity_n_i) encoded_symbol = 6'b111001;
-      else encoded_symbol = 6'b000110;
+      if(is_run_disparity_n_i) begin
+        encoded_symbol = 6'b111001;
+        post5b6b_run_disparity_n = 1'b0;
+      end else begin
+        encoded_symbol = 6'b000110;
+        post5b6b_run_disparity_n = 1'b1;
+      end
     end
     5'd9: begin
       encoded_symbol = 6'b100101;
+      post5b6b_run_disparity_n = is_run_disparity_n_i;
     end
     5'd10: begin
       encoded_symbol = 6'b010101;
+      post5b6b_run_disparity_n = is_run_disparity_n_i;
     end
     5'd11: begin
       encoded_symbol = 6'b110100;
+      post5b6b_run_disparity_n = is_run_disparity_n_i;
     end
     5'd12: begin
       encoded_symbol = 6'b001101;
+      post5b6b_run_disparity_n = is_run_disparity_n_i;
     end
     5'd13: begin
       encoded_symbol = 6'b101100;
+      post5b6b_run_disparity_n = is_run_disparity_n_i;
     end
     5'd14: begin
       encoded_symbol = 6'b011100;
+      post5b6b_run_disparity_n = is_run_disparity_n_i;
     end
     5'd15: begin
-      if(is_run_disparity_n_i) encoded_symbol = 6'b010111;
-      else encoded_symbol = 6'b101000;
+      if(is_run_disparity_n_i) begin
+        encoded_symbol = 6'b010111;
+        post5b6b_run_disparity_n =  1'b0;
+      end else begin
+        encoded_symbol = 6'b101000;
+        post5b6b_run_disparity_n = 1'b1;
+      end
     end
     5'd16: begin
-      if(is_run_disparity_n_i) encoded_symbol = 6'b011011;
-      else encoded_symbol = 6'b100100;
+      if(is_run_disparity_n_i) begin
+        encoded_symbol = 6'b011011;
+        post5b6b_run_disparity_n = 1'b0;
+      end else begin
+        encoded_symbol = 6'b100100;
+        post5b6b_run_disparity_n = 1'b1;
+      end
     end
     5'd17: begin
       encoded_symbol = 6'b100011;
+      post5b6b_run_disparity_n = is_run_disparity_n_i;
     end
     5'd18: begin
       encoded_symbol = 6'b010011;
+      post5b6b_run_disparity_n = is_run_disparity_n_i;
     end
     5'd19: begin
       encoded_symbol = 6'b110010;
+      post5b6b_run_disparity_n = is_run_disparity_n_i;
     end
     5'd20: begin
       encoded_symbol = 6'b001011;
+      post5b6b_run_disparity_n = is_run_disparity_n_i;
     end
     5'd21: begin
       encoded_symbol = 6'b101010;
+      post5b6b_run_disparity_n = is_run_disparity_n_i;
     end
     5'd22: begin
       encoded_symbol = 6'b011010;
+      post5b6b_run_disparity_n = is_run_disparity_n_i;
     end
     5'd23: begin
-      if(is_run_disparity_n_i) encoded_symbol = 6'b111010;
-      else encoded_symbol = 6'b000101;
+      if(is_run_disparity_n_i) begin
+        encoded_symbol = 6'b111010;
+        post5b6b_run_disparity_n = 1'b0;
+      end else begin
+        encoded_symbol = 6'b000101;
+        post5b6b_run_disparity_n = 1'b1;
+      end
     end
     5'd24: begin
-      if(is_run_disparity_n_i) encoded_symbol = 6'b110011;
-      else encoded_symbol = 6'b001100;
+      if(is_run_disparity_n_i) begin
+        encoded_symbol = 6'b110011;
+        post5b6b_run_disparity_n = 1'b0;
+      end else begin
+        encoded_symbol = 6'b001100;
+        post5b6b_run_disparity_n = 1'b1;
+      end
     end
     5'd25: begin
       encoded_symbol = 6'b100110;
+      post5b6b_run_disparity_n = is_run_disparity_n_i;
     end
     5'd26: begin
       encoded_symbol = 6'b010110;
+      post5b6b_run_disparity_n = is_run_disparity_n_i;
     end
     5'd27: begin
-      if(is_run_disparity_n_i) encoded_symbol = 6'b110110;
-      else encoded_symbol = 6'b001001;
+      if(is_run_disparity_n_i) begin
+        encoded_symbol = 6'b110110;
+        post5b6b_run_disparity_n = 1'b0;
+      end else begin
+        encoded_symbol = 6'b001001;
+        post5b6b_run_disparity_n = 1'b1;
+      end
     end
     5'd28: begin
       encoded_symbol = 6'b001110;
+      post5b6b_run_disparity_n = is_run_disparity_n_i;
     end
     5'd29: begin
-      if(is_run_disparity_n_i) encoded_symbol = 6'b101110;
-      else encoded_symbol = 6'b010001;
+      if(is_run_disparity_n_i) begin
+        encoded_symbol = 6'b101110;
+        post5b6b_run_disparity_n = 1'b0;
+      end else begin
+        encoded_symbol = 6'b010001;
+        post5b6b_run_disparity_n = 1'b1;
+      end
     end
     5'd30: begin
-      if(is_run_disparity_n_i) encoded_symbol = 6'b011110;
-      else encoded_symbol = 6'b100001;
+      if(is_run_disparity_n_i) begin
+        encoded_symbol = 6'b011110;
+        post5b6b_run_disparity_n = 1'b0;
+      end else begin
+        encoded_symbol = 6'b100001;
+        post5b6b_run_disparity_n = 1'b1;
+      end
     end
     5'd31: begin
-      if(is_run_disparity_n_i) encoded_symbol = 6'b101011;
-      else encoded_symbol = 6'b010100;
+      if(is_run_disparity_n_i) begin
+        encoded_symbol = 6'b101011;
+        post5b6b_run_disparity_n = 1'b0;
+      end else begin
+        encoded_symbol = 6'b010100;
+        post5b6b_run_disparity_n = 1'b1;
+      end
     end
     default: begin
       encoded_symbol = 6'b000000;
+      post5b6b_run_disparity_n = 1'b0;
     end
     endcase
 
@@ -166,16 +262,7 @@ module encoder_5b6b #(
     end
   end
 
-
-`endif
-
-  disparity_checker  #(
-    .BITWIDTH(6)
-   ) disp_check_inst (
-    .symbol_i     (encoded_symbol),
-    .disparity_o  (post5b6b_run_disparity_n_d)
-  );
-
+`endif // LUTRAM_8b6b
 
   always_ff @(posedge clk_i or posedge rst_i) begin
     if(rst_i) begin
@@ -184,7 +271,8 @@ module encoder_5b6b #(
       post5b6b_run_disparity_n_q <= post5b6b_run_disparity_n_d;
     end
   end
-
   assign post5b6b_run_disparity_n_o = post5b6b_run_disparity_n_q;
 
+
 endmodule
+
