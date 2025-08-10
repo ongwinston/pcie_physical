@@ -35,9 +35,8 @@ module encoder_8b10b #(
   logic [2:0] encoder_3b4b_data_in_d, encoder_3b4b_data_in_q;
   logic [3:0] encoder_3b4b_symbol_out;
   logic       is_run_disparity_n;
+  logic       post3b4b_run_disparity_n;
   logic       post5b6b_run_disparity_n;
-  logic       post3b6b_run_disparity_neg_d, post3b6b_run_disparity_neg_q;
-  logic       is_special_k;
 
   logic [4:0] encoder_5b6b_data_in;
   logic [5:0] encoder_5b6b_symbol_d, encoder_5b6b_symbol_q;
@@ -45,8 +44,6 @@ module encoder_8b10b #(
   logic [9:0] encoder8b10b_d, encoder8b10b_q;
 
   /////////////////////////////////////////////////////////////
-
-  assign is_special_k = is_special_k_i;
 
   ////////////////////////////////////
   // 5b/6b Encoder
@@ -68,7 +65,7 @@ module encoder_8b10b #(
     .data_i                        (encoder_5b6b_data_in),
     .data_o                        (encoder_5b6b_symbol_d),
     .is_run_disparity_n_i          (is_run_disparity_n),
-    .is_special_k_i                (is_special_k),
+    .is_special_k_i                (is_special_k_i),
     .post5b6b_run_disparity_n_o    (post5b6b_run_disparity_n)
 
   );
@@ -101,13 +98,19 @@ module encoder_8b10b #(
     .data_i                        (encoder_3b4b_data_in_q),
     .data_o                        (encoder_3b4b_symbol_out),
     .is_run_disparity_n_i          (post5b6b_run_disparity_n),
-    .is_special_k_i                (is_special_k),
-    .run_disparity_neg_post3b4b_o  (is_run_disparity_n)
+    .is_special_k_i                (is_special_k_i),
+    .run_disparity_n_post3b4b_o    (post3b4b_run_disparity_n)
 
   );
 
   // Finally assemble the final 8b10b decoded symbol to be flopped in the next step
   assign encoder8b10b_d = {encoder_5b6b_symbol_q, encoder_3b4b_symbol_out};
+
+  disparity_checker disparity_checker_inst (
+    .symbol_i              (encoder8b10b_d),
+    .current_disparity_i   (post5b6b_run_disparity_n),
+    .disparity_negative_o  (is_run_disparity_n)
+  );
 
   // Output Flopped signal
   always_ff @( posedge clk_i or posedge rst_i ) begin
