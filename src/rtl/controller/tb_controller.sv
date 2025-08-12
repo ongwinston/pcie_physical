@@ -6,7 +6,7 @@ module tb_controller (
   logic rst, rst_sync;
 
   initial begin
-    rst = 1'b0;
+    rst = 1'b1;
     #10ns rst = ~rst;
 
     #100us $finish();
@@ -23,5 +23,18 @@ module tb_controller (
     .clk_i (clk),
     .rst_i (rst_sync)
   );
+
+
+
+  //---------------------
+  // Waveform dump
+  //---------------------
+
+  initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars(0);
+  end
+
+
 
 endmodule

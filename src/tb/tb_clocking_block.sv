@@ -18,6 +18,10 @@ module tb_clocking_block #(
   logic clk;
   logic [1:0] rst_sync;
 
+  initial begin
+    clk = 1'b0;
+  end
+
   always begin
     #`CLK_FREQ_HZ clk = ~clk;
   end
