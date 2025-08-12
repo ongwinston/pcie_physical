@@ -1,0 +1,46 @@
+CAPI=2:
+name: "pcie:physical:controller:0.1"
+description: "Control logic for the pcie physical block"
+
+filesets:
+  files_rtl:
+    files:
+      - src/rtl/controller/pcie_controller.sv
+      - src/rtl/ltssm_pkg.svh:
+          is_include_file: true
+    file_type: systemVerilogSource
+  files_tb:
+    files:
+      - src/tb/tb_clocking_block.sv
+      - src/rtl/controller/tb_controller.sv
+    file_type: systemVerilogSource
+
+targets:
+  default: &default_target
+    filesets:
+      - files_rtl
+
+  xilinx_sim:
+    <<: *default_target
+    default_tool: xsim
+    filesets_append:
+      - files_tb
+    toplevel: tb_controller
+    tools:
+      xsim:
+        xelab_options:
+          - '-v2'
+          - '-d SIMULATOR_ICARUS=1'
+
+  lint:
+    default_tool : verilator
+    filesets : [files_rtl]
+    filesets_append:
+      - files_tb
+    tools:
+      verilator:
+        mode : lint-only
+        verilator_options:
+          - '--no-timing'
+          - '-Wall'
+    toplevel : tb_controller
