@@ -1,12 +1,46 @@
-`include "ltssm_pkg.svh"
+// `ifndef LTSSM_PKG
+//   `define LTSSM_PKG
+//   `include "ltssm_pkg.svh"
+// `endif
 
 module pcie_controller (
-  input clk_i,
-  input rst_i
+  input   logic clk_i,
+  input   logic rst_i,
+
+
+  // Physical Layer Electrical
+  input   logic phy_layer_lane_detect_i, // Electrical Receiver Detection Sequence
+
+  output  logic en_8b10b_encoder_o,
+  output  logic en_128b130b_encoder_o
 );
 
-  ltssm_e controller_st_d, controller_st_q;
+  import ltssm_pkg::*;
 
+  //---------------------------------------------------------
+  // Reg Wire declarations
+  //---------------------------------------------------------
+
+  ltssm_e controller_st_d, controller_st_q;
+  logic linkUp_d, linkUp_q;
+  // logic use_modified_TS1_TS2_Ordered_set;
+  // logic directed_speed_change;
+  // logic upconfigure_capable;
+  // logic idle_to_rlock_transitioned;
+  // logic select_deemphasis;
+  // logic equalization_done_8GT_data_rate;
+  // logic equalization_done_16GT_data_rate;
+  // logic equalization_done_32GT_data_rate;
+
+  // Detect status
+  logic control_detect_active;
+
+  //---------------------------------------------------------
+
+
+  //---------------------------------------------------------
+  // State machine transition
+  //---------------------------------------------------------
   always_ff @(posedge clk_i or posedge rst_i) begin
     if (rst_i) begin
       controller_st_q <= DETECT;
@@ -15,20 +49,78 @@ module pcie_controller (
     end
   end
 
+
+
+  //---------------------------------------------------------
+  // State machine logic
+  //---------------------------------------------------------
   always_comb begin
+    // Default assigns
+    linkUp_d = 1'b0;
+    en_8b10b_encoder_o = 1'b0; // TODO
+    en_128b130b_encoder_o = 1'b0; // TODO
+
     case (controller_st_q)
-      DETECT: controller_st_d = POLLING;
-      POLLING: controller_st_d = CONFIGURATION;
-      CONFIGURATION: controller_st_d = RECOVERY;
-      RECOVERY: controller_st_d = L0;
-      L0: controller_st_d = L0S;
-      L0S: controller_st_d = L1;
-      L1: controller_st_d = L2;
-      L2: controller_st_d = DISABLED;
-      DISABLED: controller_st_d = LOOPBACK;
-      LOOPBACK: controller_st_d = LOOPBACK;
-      default: controller_st_d = DETECT;
+      DETECT: begin
+        controller_st_d = DETECT;
+
+        // Enter polling when control_detect.active and phy_layer_lane_detect
+        if(control_detect_active && phy_layer_lane_detect_i) controller_st_d = POLLING;
+      end
+      POLLING: begin
+        controller_st_d = CONFIGURATION;
+      end
+      CONFIGURATION: begin
+        controller_st_d = RECOVERY;
+      end
+      RECOVERY: begin
+        controller_st_d = L0;
+      end
+      L0: begin
+        controller_st_d = L0S;
+      end
+      L0S: begin
+        controller_st_d = L1;
+      end
+      L1: begin
+        controller_st_d = L2;
+      end
+      L2: begin
+        controller_st_d = DISABLED;
+      end
+      DISABLED: begin
+        controller_st_d = LOOPBACK;
+      end
+      LOOPBACK: begin
+        controller_st_d = LOOPBACK;
+      end
+      default: begin
+        controller_st_d = DETECT;
+      end
     endcase
+  end
+
+
+  //---------------------------------------------------------
+  // Detect Sub State Machine
+  //---------------------------------------------------------
+  control_detect control_detect_inst (
+    .clk_i                   (clk_i),
+    .rst_i                   (rst_i),
+    .active_o                (control_detect_active),
+    .phy_layer_lane_detect_i (phy_layer_lane_detect_i)
+  );
+
+
+
+
+  //---------------------------------------------------------
+  always_ff @( posedge clk_i or posedge rst_i ) begin : status_regs
+    if (rst_i) begin
+      linkUp_q <= 1'b0;
+    end else begin
+      linkUp_q <= linkUp_d;
+    end
   end
 
 endmodule

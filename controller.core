@@ -5,9 +5,10 @@ description: "Control logic for the pcie physical block"
 filesets:
   files_rtl:
     files:
+      - src/rtl/ltssm_pkg.svh
       - src/rtl/controller/pcie_controller.sv
-      - src/rtl/ltssm_pkg.svh:
-          is_include_file: true
+      - src/rtl/controller/control_detect.sv
+      - src/rtl/timer/timer.sv
     file_type: systemVerilogSource
   files_tb:
     files:
@@ -31,6 +32,7 @@ targets:
         xelab_options:
           - '-v2'
           - '-d SIMULATOR_ICARUS=1'
+          - '-d SIMULATION=1'
 
   lint:
     default_tool : verilator

@@ -9,7 +9,7 @@ module tb_controller (
     rst = 1'b1;
     #10ns rst = ~rst;
 
-    #100us $finish();
+    #1ms $finish();
   end
 
   tb_clocking_block tb_clocking_block_inst (
@@ -21,7 +21,12 @@ module tb_controller (
 
   pcie_controller pcie_controller_dut (
     .clk_i (clk),
-    .rst_i (rst_sync)
+    .rst_i (rst_sync),
+
+    .phy_layer_lane_detect_i(),
+
+    .en_8b10b_encoder_o(),
+    .en_128b130b_encoder_o()
   );
 
 
