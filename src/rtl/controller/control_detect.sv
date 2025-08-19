@@ -9,8 +9,8 @@ module control_detect #(
   input  logic clk_i,
   input  logic rst_i,
 
-  input  logic phy_layer_lane_detect_i,
-  output logic active_o
+  input  logic phy_layer_lane_detect_i, // Physical Electrical layer notifiying load on the lane
+  output logic active_o // Actively listening for Electrical layer lane detect
 
 );
 
@@ -52,7 +52,8 @@ module control_detect #(
 
         /* Transmitter performs Receiver Detection Sequence on all unconfigured lanes 8.4.5.7*/
         if(phy_layer_lane_detect_i) begin
-          active_o = 1'b0;
+          // active_o = 1'b0;
+          detect_st_d = DETECT_QUIET;
         end
       end
       default: begin

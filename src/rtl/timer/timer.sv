@@ -2,7 +2,7 @@
  Timer module to issue an interrupt given a specific timing in its parameter
  */
 
-
+// 2,400,000
 `define TIMEOUT_2_400_000 32'h249F00
 
 `ifdef SIMULATION
@@ -13,7 +13,7 @@
 `endif
 
 module timer #(
-  parameter int INTERUPT_TIME_MS = 12
+  parameter int INTERRUPT_TIME_MS = 12
 ) (
   input clk_i,
   input rst_i,
@@ -22,6 +22,12 @@ module timer #(
 );
 
   logic [31:0] cnt_d, cnt_q; // Create a 32 bit counter register. We only need 21 bits for 12ms but alas.
+
+  // Calculate the required number of cycles needed for the interrupt_time_ms
+  localparam int CLOCK_FREQ_200MHZ = 200000000;
+  localparam int TIMEOUT_CYCLES = CLOCK_FREQ_200MHZ * (INTERRUPT_TIME_MS/1000);
+
+
 
   /* Detect timer requires 12ms to pass before transitioning from Detect.Quiet ->  Detect.Active*/
 

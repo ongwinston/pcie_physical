@@ -15,8 +15,10 @@ module tb_clocking_block #(
   output rst_sync_o
 );
 
+  // verilator lint_off UNOPTFLAT
   logic clk;
   logic [1:0] rst_sync;
+  // verilator lint_on UNOPTFLAT
 
   initial begin
     clk = 1'b0;

@@ -3,7 +3,10 @@
 //   `include "ltssm_pkg.svh"
 // `endif
 
-module pcie_controller (
+module pcie_controller #(
+  parameter int NUM_LANES_SUPPORTED = 1
+)
+ (
   input   logic clk_i,
   input   logic rst_i,
 
@@ -68,7 +71,11 @@ module pcie_controller (
         if(control_detect_active && phy_layer_lane_detect_i) controller_st_d = POLLING;
       end
       POLLING: begin
-        controller_st_d = CONFIGURATION;
+        /* Transmitter sends TS1 OS with lane and link numbers set to PAD on all lanes
+        that detected a Receiver during Detect*/
+
+
+        controller_st_d = POLLING;
       end
       CONFIGURATION: begin
         controller_st_d = RECOVERY;
@@ -96,6 +103,7 @@ module pcie_controller (
       end
       default: begin
         controller_st_d = DETECT;
+        linkUp_d = 1'b0;
       end
     endcase
   end
