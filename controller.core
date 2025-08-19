@@ -5,7 +5,7 @@ description: "Control logic for the pcie physical block"
 filesets:
   files_rtl:
     files:
-      - src/rtl/ltssm_pkg.svh
+      - src/rtl/ltssm_pkg.sv
       - src/rtl/controller/pcie_controller.sv
       - src/rtl/controller/control_detect.sv
       - src/rtl/timer/timer.sv
