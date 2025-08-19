@@ -419,3 +419,4 @@ FodyWeavers.xsd
 
 # Exclude all Fusesoc build files
 build
+runs

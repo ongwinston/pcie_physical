@@ -1,0 +1,7 @@
+{
+  "DESIGN_NAME": "pcie_controller",
+  "VERILOG_FILES": ["dir::src/rtl/ltssm_pkg.sv", "dir::src/rtl/controller/control_detect.sv", "dir::src/rtl/controller/pcie_controller.sv", "dir::src/rtl/timer/timer.sv"],
+  "CLOCK_PERIOD": 25,
+  "CLOCK_PORT": "clk_i",
+  "USE_SYNLIG": 1
+}
