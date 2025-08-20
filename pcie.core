@@ -1,0 +1,54 @@
+CAPI=2:
+name: "pcie:physical:top:0.1"
+description: "Implementation of Physical Logical layer PCI Express Base Specification Revision 5.0 Version 1.0"
+
+
+filesets:
+  files_rtl:
+    files:
+      - src/rtl/ltssm_pkg.sv
+      - src/rtl/pcie_phys_top.sv
+    file_type: systemVerilogSource
+    depend:
+      - pcie:physical:controller:0.1
+      - pcie:physical:lfsr
+      - pcie:physical:encoders:0.1
+    file_type: systemVerilogSource
+
+  files_tb:
+    files:
+      - src/tb/tb_pcie_physical.sv
+      - src/tb/tb_clocking_block.sv
+    file_type: systemVerilogSource
+
+
+targets:
+  default: &default_target
+    filesets:
+      - files_rtl
+
+  xilinx_sim:
+    <<: *default_target
+    default_tool: xsim
+    filesets_append:
+      - files_tb
+    toplevel: tb_pcie_physical
+    tools:
+      xsim:
+        xelab_options:
+          - '-v2'
+          - '-d SIMULATOR_ICARUS=1'
+          - '-d SIMULATION=1'
+
+  lint:
+    default_tool : verilator
+    filesets : [files_rtl]
+    filesets_append:
+      - files_tb
+    tools:
+      verilator:
+        mode : lint-only
+        verilator_options:
+          - '--no-timing'
+          - '-Wall'
+    toplevel : tb_pcie_physical
