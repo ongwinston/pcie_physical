@@ -3,9 +3,11 @@
  */
 
 // Clocking frequency 200Mhz = 5ns(p)
-//
+// Clocking frequency 100Mhz = 10ns(p)
+// Common reference clock at 100MHz by TI
+// https://www.ti.com/lit/an/snaa386/snaa386.pdf?ts=1755694873041
 
-`define CLK_FREQ_HZ 5
+`define CLK_FREQ_HZ 10
 
 module tb_clocking_block #(
   // parameter CLK_FREQ_HZ = 5ns //200 MHz
