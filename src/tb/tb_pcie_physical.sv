@@ -1,29 +1,26 @@
-
 `define SIM_TIMEOUT 100us
 
+module tb_pcie_physical ();
 
-module tb_controller (
-
-);
 
   //=================================================================================
   // Configurable Params
   //=================================================================================
 
   // verilator lint_off UNUSEDPARAM
-  parameter int NUM_OF_LANES = 1;
-  // verilator lint_on UNUSEDPARAM
-
+  // verilator lint_off UNUSEDSIGNAL
   // verilator lint_off UNOPTFLAT
+  parameter int NUM_OF_LANES = 1;
+
   logic clk;
   logic rst, rst_sync;
-  // verilator lint_on UNOPTFLAT
 
-  // verilator lint_off UNUSEDSIGNAL
   logic phy_lane_detected;
   logic en8b10b;
   logic en128b130b;
   // verilator lint_on UNUSEDSIGNAL
+  // verilator lint_on UNUSEDPARAM
+  // verilator lint_on UNOPTFLAT
 
 
   //=================================================================================
@@ -70,16 +67,15 @@ module tb_controller (
 
   );
 
-  pcie_controller  #(
-    .NUM_LANES(NUM_OF_LANES)
-  ) pcie_controller_dut (
+  pcie_phys_top  #(
+    .NUM_LANES(NUM_OF_LANES),
+    .MAC_FRAME_WIDTH(8)
+  ) pcie_top_dut (
     .clk_i                   (clk),
     .rst_i                   (rst_sync),
-
-    .phy_layer_lane_detect_i (phy_lane_detected),
-
-    .en_8b10b_encoder_o      (en8b10b),
-    .en_128b130b_encoder_o   (en128b130b)
+    .mac_data_frame_i        (8'hab),
+    .mac_data_frame_valid_i  (1'b1),
+    .mac_data_frame_ready_o  ()
   );
 
 
@@ -92,5 +88,4 @@ module tb_controller (
     $dumpfile("dump.vcd");
     $dumpvars(0);
   end
-
 endmodule

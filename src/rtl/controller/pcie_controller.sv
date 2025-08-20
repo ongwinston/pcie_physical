@@ -4,7 +4,7 @@
 // `endif
 
 module pcie_controller #(
-  parameter int NUM_LANES_SUPPORTED = 1
+  parameter int NUM_LANES = 1
 )
  (
   input   logic clk_i,

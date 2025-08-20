@@ -1,5 +1,5 @@
 CAPI=2:
-name: "pcie:physical:lfsr"
+name: "pcie:physical:lfsr:0.1"
 description: "Implementation of linear feedback shift register"
 
 filesets:
