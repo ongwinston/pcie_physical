@@ -4,10 +4,7 @@
 Implementation of Physical Logical layer PCI Express Base Specification Revision 5.0 Version 1.0
 
 
-## Language SystemVerilog
-
 # Simulator choice
-- Icarus Verilog
 - Xilinx Simulator
 - Verilator
 
@@ -15,7 +12,29 @@ Implementation of Physical Logical layer PCI Express Base Specification Revision
 - Fusesoc
 
 
-# How to Simulate top level
+# How to
+
+## How to Run lint
+```sh
+poetry run fusesoc --cores-root=.  --verbose  run --target=lint --setup --build --run pcie:physical:top:0.1
+```
+
+## Simulate top level
 ```sh
 poetry run fusesoc --cores-root=.  --verbose  run --target=xilinx_sim --setup --build --run pcie:physical:top:0.1
+```
+
+## How to Run OpenLane / LibreLane Synthesis PnR Tools
+
+1) Open a nix-shell
+```sh
+nix-shell --pure ~/librelane/shell.nix
+```
+2) Target json config file
+```sh
+librelane librelane_config.json --overwrite
+```
+
+## How to Run Vivado Synth
+```sh
 ```
