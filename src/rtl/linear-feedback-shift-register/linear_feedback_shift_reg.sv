@@ -9,10 +9,10 @@ Used for data scrambling before data encoding
 
 
 module linear_feedback_shift_reg (
-    input logic clk,
-    input logic reset,
-    input logic data_in,
-    output logic data_out
+    input logic clk_i,
+    input logic rst_i,
+    input logic data_i,
+    output logic data_o
 );
 
     // localparam COM = 8'hFF;
@@ -22,8 +22,8 @@ module linear_feedback_shift_reg (
     logic [7:0] bit_cnt = 8'h00;
     logic byte_indicator;
 
-    always_ff @(posedge clk) begin
-        if(reset) begin
+    always_ff @(posedge clk_i) begin
+        if(rst_i) begin
             lfsr_r <= 16'hFFFF;
         end else begin
             lfsr_r <= { lfsr_r[14],
@@ -46,18 +46,18 @@ module linear_feedback_shift_reg (
         end
     end
 
-    always_ff @( posedge clk ) begin
-        if (reset) begin
+    always_ff @(posedge clk_i) begin
+        if (rst_i) begin
             data_shift_r <= 8'h00;
         end else begin
             // Data shifts in from the MSB -> LSB
-            data_shift_r <= {data_in, data_shift_r[6:0]};
+            data_shift_r <= {data_i, data_shift_r[6:0]};
         end
     end
 
 
-    always_ff @(posedge clk) begin
-        if(reset) begin
+    always_ff @(posedge clk_i) begin
+        if(rst_i) begin
             bit_cnt <= 8'h00;
         end else begin
             if(bit_cnt == 8'h08) begin
@@ -71,7 +71,7 @@ module linear_feedback_shift_reg (
     assign byte_indicator = (bit_cnt == 8'h08) ? 1'b1 : 1'b0;
 
 
-    assign data_out = data_shift_r[0] ^ lfsr_r[15];
+    assign data_o = data_shift_r[0] ^ lfsr_r[15];
 
 
 

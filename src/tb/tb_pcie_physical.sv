@@ -10,7 +10,7 @@ module tb_pcie_physical ();
   // verilator lint_off UNUSEDPARAM
   // verilator lint_off UNUSEDSIGNAL
   // verilator lint_off UNOPTFLAT
-  parameter int NUM_OF_LANES = 1;
+  parameter int NUM_OF_LANES = 4;
 
   logic clk;
   logic rst, rst_sync;
@@ -71,11 +71,12 @@ module tb_pcie_physical ();
     .NUM_LANES(NUM_OF_LANES),
     .MAC_FRAME_WIDTH(8)
   ) pcie_top_dut (
-    .clk_i                   (clk),
-    .rst_i                   (rst_sync),
-    .mac_data_frame_i        (8'hab),
-    .mac_data_frame_valid_i  (1'b1),
-    .mac_data_frame_ready_o  ()
+    .clk_i                     (clk),
+    .rst_i                     (rst_sync),
+    .mac_data_frame_i          (8'hab),
+    .mac_data_frame_valid_i    (1'b1),
+    .mac_data_frame_ready_o    (),
+    .electrical_sub_out_bits_o ()
   );
 
 
