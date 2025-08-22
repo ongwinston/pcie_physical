@@ -44,11 +44,11 @@ module scrambler #(
     end
   end
 
-  always_ff @(posedge clk_i or posedge rst_i) begin
+  always_ff @(posedge clk_i) begin
     if(rst_i) begin
       cntr_q <= CNTR_WIDTH'(0);
     end else begin
-      cntr_q <= cntr_d;
+      if(data_frame_valid_i) cntr_q <= cntr_d;
     end
   end
 
@@ -62,11 +62,21 @@ module scrambler #(
     .data_o      (lfsr_out)
   );
 
+  always_ff @(posedge clk_i) begin
+    if (rst_i) begin
+      lfsr_out_constructed <= DATA_WIDTH'(0);
+    end else begin
+      lfsr_out_constructed <= {lfsr_out_constructed[DATA_WIDTH:1], lfsr_out};
+    end
+  end
+
 
   //==========================================================
   // Output assign
   //==========================================================
-  assign scrambler_ready_o = 1'b1; // TODO
+  assign data_scrambled_valid_o = (cntr_q == CNTR_WIDTH'(8)) ? 1'b1 : 1'b0;
+  assign scrambler_ready_o = 1'b1; //TODO Fix
+  assign data_scrambled_o = lfsr_out_constructed;
 
 endmodule
 

@@ -17,9 +17,11 @@ module multi_lane_controller #(
 ) (
     input logic                         clk_i,
     input logic                         rst_i,
-    input logic [NUM_LANES-1:0]         lane_enable_i,
+    input logic [NUM_LANES-1:0]         lane_enable_i, // Lane Enable signal from the controller, with a load
     input logic [7:0]                   data_frame_i,
     input logic                         data_frame_valid_i,
+
+    // TX data to Physical Electrical layer
     output logic [NUM_LANES-1:0]        lane_bit_o,
     output logic [NUM_LANES-1:0]        lane_bit_valid_o
 );
