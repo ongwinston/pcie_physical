@@ -7,15 +7,15 @@ module pcie_controller #(
   parameter int NUM_LANES = 1
 )
  (
-  input   logic clk_i,
-  input   logic rst_i,
+  input  logic clk_i,
+  input  logic rst_i,
 
 
   // Physical Layer Electrical
-  input   logic phy_layer_lane_detect_i, // Electrical Receiver Detection Sequence
+  input  logic [NUM_LANES-1 : 0] phy_layer_lane_detect_i, // Electrical Receiver Detection Sequence
 
-  output  logic en_8b10b_encoder_o,
-  output  logic en_128b130b_encoder_o
+  output logic en_8b10b_encoder_o,
+  output logic en_128b130b_encoder_o
 );
 
   import ltssm_pkg::*;

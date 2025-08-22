@@ -43,7 +43,7 @@ module pcie_phys_top #(
     .clk_i                   (clk_i),
     .rst_i                   (rst_i),
 
-    .phy_layer_lane_detect_i (phy_lane_detected),
+    .phy_layer_lane_detect_i (electrical_sub_load_detect_i),
 
     .en_8b10b_encoder_o      (en8b10b),
     .en_128b130b_encoder_o   (en128b130b)
