@@ -9,7 +9,7 @@ filesets:
       - src/rtl/ltssm_pkg.sv
       - src/rtl/pcie_phys_top.sv
       - src/rtl/multi_lane_controller.sv
-      - src/rtl/scrambler.sv
+      - src/rtl/scrambler/scrambler.sv
     file_type: systemVerilogSource
     depend:
       - pcie:physical:controller:0.1

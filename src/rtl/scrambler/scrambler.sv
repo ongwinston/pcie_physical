@@ -18,15 +18,23 @@ module scrambler #(
 
 );
 
+  localparam int unsigned CNTR_WIDTH = $clog2(DATA_WIDTH);
 
+  //==========================================================
   // Wires
-  logic [$clog2(DATA_WIDTH) : 0] cntr;
+  //==========================================================
+  logic [CNTR_WIDTH-1 : 0] cntr_d, cntr_q;
   logic [DATA_WIDTH-1 : 0] lfsr_data_in_d, lfsr_data_in_q;
 
   logic [DATA_WIDTH-1 : 0] lfsr_out_constructed;
   logic lfsr_out;
 
+  //==========================================================
+  // Scrambler counter
+  //==========================================================
+
   assign lfsr_data_in_d = {lfsr_data_in_q[6:0], 1'b0};
+  assign cntr_d = cntr_q + 1'b1;
 
   always_ff @(posedge clk_i) begin
     if(rst_i) begin
@@ -36,18 +44,28 @@ module scrambler #(
     end
   end
 
+  always_ff @(posedge clk_i or posedge rst_i) begin
+    if(rst_i) begin
+      cntr_q <= CNTR_WIDTH'(0);
+    end else begin
+      cntr_q <= cntr_d;
+    end
+  end
+
+  //==========================================================
   // LFSR Instance
+  //==========================================================
   linear_feedback_shift_reg lfsr_inst(
     .clk_i       (clk_i),
     .rst_i       (rst_i),
     .data_i      (lfsr_data_in_q[7]),
     .data_o      (lfsr_out)
-);
+  );
 
 
-  //=======================================
+  //==========================================================
   // Output assign
-  //=======================================
+  //==========================================================
   assign scrambler_ready_o = 1'b1; // TODO
 
 endmodule

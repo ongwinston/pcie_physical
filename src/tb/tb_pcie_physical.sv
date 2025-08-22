@@ -71,12 +71,14 @@ module tb_pcie_physical ();
     .NUM_LANES(NUM_OF_LANES),
     .MAC_FRAME_WIDTH(8)
   ) pcie_top_dut (
-    .clk_i                     (clk),
-    .rst_i                     (rst_sync),
-    .mac_data_frame_i          (8'hab),
-    .mac_data_frame_valid_i    (1'b1),
-    .mac_data_frame_ready_o    (),
-    .electrical_sub_out_bits_o ()
+    .clk_i                        (clk),
+    .rst_i                        (rst_sync),
+    .mac_data_frame_i             (8'hab),
+    .mac_data_frame_valid_i       (1'b1),
+    .mac_data_frame_ready_o       (),
+
+    .electrical_sub_load_detect_i ('1),
+    .electrical_sub_out_bits_o    ()
   );
 
 
