@@ -17,20 +17,23 @@ module multi_lane_controller #(
 ) (
     input logic                         clk_i,
     input logic                         rst_i,
-    input logic [$clog2(NUM_LANES)-1:0] lane_enable_i,
+    input logic [NUM_LANES-1:0]         lane_enable_i,
     input logic [7:0]                   data_frame_i,
     input logic                         data_frame_valid_i,
-    output logic                        lane_bit_o,
-    output logic                        lane_bit_valid_o
+    output logic [NUM_LANES-1:0]        lane_bit_o,
+    output logic [NUM_LANES-1:0]        lane_bit_valid_o
 );
 
   //======================================================================================================
   // Wires
   //======================================================================================================
+
   logic [DATA_WIDTH-1 : 0] scrambled_data [1:NUM_LANES];
   logic scrambled_data_valid[1:NUM_LANES];
+
   //======================================================================================================
   // Scramblers
+  // Bypass scrambler for Ordered sets
   //======================================================================================================
 
   generate
@@ -53,6 +56,17 @@ module multi_lane_controller #(
   //======================================================================================================
   // Encoders
   //======================================================================================================
+  generate
+    for(genvar i=0; i < NUM_LANES; i++) begin : gen_encoders
+      encoder_8b10b dut_encoder_8b10b (
+        .clk_i                  (clk_i),
+        .rst_i                  (rst_i),
+        .data_i                 (),
+        .encoded_8b10b_symbol_o (),
+        .is_special_k_i         (1'b0)
+      );
+    end
+  endgenerate
   //======================================================================================================
   // Assigns
   //======================================================================================================
