@@ -1,5 +1,7 @@
 /*
+ LTSSM or Link Training and Status State Machine
 
+ Definitions for all of the state and substate blocks of the LTSSM
 */
 package ltssm_pkg;
   typedef enum logic [3:0] {
