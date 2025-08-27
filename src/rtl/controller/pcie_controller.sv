@@ -27,6 +27,10 @@ module pcie_controller #(
 
   ltssm_e controller_st_d, controller_st_q;
   logic linkUp_d, linkUp_q;
+  logic any_lane_detected_load;
+  logic [NUM_LANES-1 : 0] lanes_w_detected_load_d, lanes_w_detected_load_q;
+
+  /* Status Registers*/
   // logic use_modified_TS1_TS2_Ordered_set;
   // logic directed_speed_change;
   // logic upconfigure_capable;
@@ -37,7 +41,7 @@ module pcie_controller #(
   // logic equalization_done_32GT_data_rate;
 
   // Detect status
-  logic control_detect_active;
+  logic control_detect_active; // control_detect subblock actively in detect
 
   //---------------------------------------------------------
   // link capabilities reg
@@ -95,25 +99,41 @@ module pcie_controller #(
   // State machine logic
   //---------------------------------------------------------
 
-  logic any_lane_detection;
-  assign any_lane_detection = |phy_layer_lane_detect_i;
+  assign any_lane_detected_load = |phy_layer_lane_detect_i;
+
+  always_ff @(posedge clk_i or posedge rst_i) begin
+    if(rst_i) begin
+      lanes_w_detected_load_q <= 'd0;
+    end else begin
+      lanes_w_detected_load_q <= lanes_w_detected_load_d;
+    end
+  end
 
   always_comb begin
     // Default assigns
     linkUp_d = 1'b0;
     en_8b10b_encoder_o = 1'b0; // TODO
     en_128b130b_encoder_o = 1'b0; // TODO
+    controller_st_d = DETECT;
+    lanes_w_detected_load_d = lanes_w_detected_load_q;
 
     case (controller_st_q)
       DETECT: begin
         controller_st_d = DETECT;
 
         // Enter polling when control_detect.active and phy_layer_lane_detect
-        if(control_detect_active && any_lane_detection) controller_st_d = POLLING;
+        if(control_detect_active && any_lane_detected_load) begin
+          controller_st_d = POLLING;
+          lanes_w_detected_load_d = phy_layer_lane_detect_i;
+        end
       end
       POLLING: begin
         /* Transmitter sends TS1 OS with lane and link numbers set to PAD on all lanes
         that detected a Receiver during Detect*/
+
+        // lanes_w_detected_load_d  (send TS1)
+          // - Data Rate Identifier symbol of the TS1 nust advertise all data rates that the port supports
+          // - Transmitter must wait for its TX common mode to settle before exiting from Electrical Idle and transmitting the
 
 
         controller_st_d = POLLING;
@@ -143,8 +163,8 @@ module pcie_controller #(
         controller_st_d = LOOPBACK;
       end
       default: begin
-        controller_st_d = DETECT;
-        linkUp_d = 1'b0;
+        // controller_st_d = DETECT;
+        // linkUp_d = 1'b0;
       end
     endcase
   end
