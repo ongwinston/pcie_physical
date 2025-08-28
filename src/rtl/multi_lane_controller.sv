@@ -22,8 +22,8 @@ module multi_lane_controller #(
     input logic                         data_frame_valid_i,
 
     // TX data to Physical Electrical layer
-    output logic [NUM_LANES-1:0]        lane_bit_o,
-    output logic [NUM_LANES-1:0]        lane_bit_valid_o
+    output logic [NUM_LANES-1:0]        lane_symbol_o,
+    output logic [NUM_LANES-1:0]        lane_symbol_valid_o
 );
 
   //======================================================================================================

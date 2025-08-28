@@ -15,8 +15,8 @@ module pcie_phys_top #(
   // Electrical RX
   input logic [NUM_LANES-1 : 0]     electrical_sub_load_detect_i, // Electrical sub block load indicator
 
-  // Serialised bits to Electrical Lanes
-  output logic [NUM_LANES-1 : 0]    electrical_sub_out_bits_o // Electrical sub block serilised bits out
+  // Symbols out to Electrical Lanes
+  output logic [NUM_LANES-1 : 0]    electrical_sub_out_symbol_o // Electrical sub block serilised bits out
 
 );
 
@@ -70,12 +70,12 @@ module pcie_phys_top #(
   multi_lane_controller #(
     .NUM_LANES(NUM_LANES)
   ) multi_lane_controller_inst (
-    .clk_i            (clk_i),
-    .rst_i            (rst_i),
-    .lane_enable_i    (lane_en),
-    .data_frame_i     (8'hf), // TODO
-    .lane_bit_o       (),
-    .lane_bit_valid_o ()
+    .clk_i               (clk_i),
+    .rst_i               (rst_i),
+    .lane_enable_i       (lane_en),
+    .data_frame_i        (8'hf), // TODO
+    .lane_symbol_o       (electrical_sub_out_symbol_o),
+    .lane_symbol_valid_o ()
   );
 
 
