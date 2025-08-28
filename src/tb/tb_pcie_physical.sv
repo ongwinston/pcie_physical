@@ -78,7 +78,7 @@ module tb_pcie_physical ();
     .mac_data_frame_ready_o       (),
 
     .electrical_sub_load_detect_i ('1),
-    .electrical_sub_out_bits_o    ()
+    .electrical_sub_out_symbol_o  ()
   );
 
 
