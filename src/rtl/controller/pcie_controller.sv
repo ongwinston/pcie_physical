@@ -19,6 +19,7 @@ module pcie_controller #(
 );
 
   import ltssm_pkg::*;
+  import capabilities_pkg::*;
 
   //---------------------------------------------------------
   // Reg Wire declarations
@@ -43,7 +44,43 @@ module pcie_controller #(
   logic control_detect_active; // control_detect subblock actively in detect
 
   //---------------------------------------------------------
+  // link capabilities reg
+  //---------------------------------------------------------
+  link_capabilities_2_reg_t link_reg;
 
+  assign link_reg.drs_supported = 1'b1;
+  assign link_reg.reserved2 = 6'd0;
+  assign link_reg.two_retimers_presence_detected_supported = 1'b1;
+  assign link_reg.retimer_presence_detected_supported = 1'b1;
+  assign link_reg.lower_skp_os_reception_supported_speed_vec_rsvd = 2'b00;
+  assign link_reg.lower_skp_os_reception_supported_speed_32_0_gt = 1'b1;
+  assign link_reg.lower_skp_os_reception_supported_speed_16_0_gt = 1'b1;
+  assign link_reg.lower_skp_os_reception_supported_speed_8_0_gt = 1'b1;
+  assign link_reg.lower_skp_os_reception_supported_speed_5_0_gt = 1'b1;
+  assign link_reg.lower_skp_os_reception_supported_speed_2_5_gt = 1'b1;
+  assign link_reg.lower_skp_os_gen_supported_speed_vec_rsvd = 2'b00;
+  assign link_reg.lower_skp_os_gen_supported_speed_32_0_gt = 1'b1;
+  assign link_reg.lower_skp_os_gen_supported_speed_16_0_gt = 1'b1;
+  assign link_reg.lower_skp_os_gen_supported_speed_8_0_gt = 1'b1;
+  assign link_reg.lower_skp_os_gen_supported_speed_5_0_gt = 1'b1;
+  assign link_reg.lower_skp_os_gen_supported_speed_2_5_gt = 1'b1;
+  assign link_reg.crosslink_supported = 1'b0;
+  assign link_reg.supported_link_speeds_vec_rsvd = 2'b00;
+  assign link_reg.supported_link_speed_32_0_gt = 1'b1;
+  assign link_reg.supported_link_speed_16_0_gt = 1'b1;
+  assign link_reg.supported_link_speed_8_0_gt = 1'b1;
+  assign link_reg.supported_link_speed_5_0_gt = 1'b1;
+  assign link_reg.supported_link_speed_2_5_gt = 1'b1;
+  assign link_reg.reserved = 1'b0;
+
+  control_status_regs #(
+    .REGISTER_WIDTH($bits(link_reg))
+  ) link_capabilities_2_ff (
+    .clk_i  (clk_i),
+    .rst_i  (rst_i),
+    .data_i (link_reg),
+    .data_o ()
+  );
 
   //---------------------------------------------------------
   // State machine transition
