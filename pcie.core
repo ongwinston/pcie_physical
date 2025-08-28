@@ -7,6 +7,7 @@ filesets:
   files_rtl:
     files:
       - src/rtl/ltssm_pkg.sv
+      - src/rtl/capabilities_pkg.sv
       - src/rtl/pcie_phys_top.sv
       - src/rtl/multi_lane_controller.sv
       - src/rtl/scrambler/scrambler.sv
