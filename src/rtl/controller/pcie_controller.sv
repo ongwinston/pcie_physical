@@ -70,7 +70,7 @@ module pcie_controller #(
   assign link_reg.reserved = 1'b0;
 
   control_status_regs #(
-
+    .REGISTER_WIDTH($bits(link_reg))
   ) link_capabilities_2_ff (
     .clk_i  (clk_i),
     .rst_i  (rst_i),
