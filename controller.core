@@ -9,6 +9,7 @@ filesets:
       - src/rtl/capabilities_pkg.sv
       - src/rtl/controller/pcie_controller.sv
       - src/rtl/controller/control_detect.sv
+      - src/rtl/controller/control_polling.sv
       - src/rtl/controller/control_status_regs.sv
       - src/rtl/timer/timer.sv
     file_type: systemVerilogSource
