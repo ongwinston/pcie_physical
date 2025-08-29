@@ -43,6 +43,9 @@ module pcie_controller #(
   // Detect status
   logic control_detect_active; // control_detect subblock actively in detect
 
+  // Polling Status
+  logic control_polling_active;
+
   //---------------------------------------------------------
   // link capabilities reg
   //---------------------------------------------------------
@@ -116,6 +119,7 @@ module pcie_controller #(
     en_128b130b_encoder_o = 1'b0; // TODO
     controller_st_d = DETECT;
     lanes_w_detected_load_d = lanes_w_detected_load_q;
+    control_polling_active = 1'b0;
 
     case (controller_st_q)
       DETECT: begin
@@ -128,6 +132,7 @@ module pcie_controller #(
         end
       end
       POLLING: begin
+        control_polling_active = 1'b1;
         /* Transmitter sends TS1 OS with lane and link numbers set to PAD on all lanes
         that detected a Receiver during Detect*/
 
@@ -135,8 +140,25 @@ module pcie_controller #(
           // - Data Rate Identifier symbol of the TS1 nust advertise all data rates that the port supports
           // - Transmitter must wait for its TX common mode to settle before exiting from Electrical Idle and transmitting the
 
+        // TS1 OS 14-15 Symbols Long
 
+        // Polling.Active
+          // TS1 OS
+        
+
+
+        // Polling.Compliance
+
+
+        // Polling.Configuration
+
+
+        // Polling.Speed
+
+
+        // Polling can enter Configuration or Detect or stay Polling
         controller_st_d = POLLING;
+        // controller_st_d = CONFIGURATION;
       end
       CONFIGURATION: begin
         controller_st_d = RECOVERY;
@@ -180,6 +202,14 @@ module pcie_controller #(
     .phy_layer_lane_detect_i (phy_layer_lane_detect_i)
   );
 
+  //---------------------------------------------------------
+  // Polling Sub State Machine
+  //---------------------------------------------------------
+  control_polling control_polling_inst (
+    .clk_i         (clk_i),
+    .rst_i         (rst_i),
+    .polling_en_i  (control_polling_active)
+  );
 
 
 
