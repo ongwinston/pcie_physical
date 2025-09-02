@@ -199,7 +199,7 @@ module pcie_controller #(
     .clk_i                   (clk_i),
     .rst_i                   (rst_i),
     .active_o                (control_detect_active),
-    .phy_layer_lane_detect_i (phy_layer_lane_detect_i)
+    .any_phy_lane_detect_i   (any_lane_detection)
   );
 
   //---------------------------------------------------------

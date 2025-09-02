@@ -40,10 +40,11 @@ WAVES := 1
 COMPILE_ARGS += -g2012 # Use SystemVerilog-2012 standard
 # COMPILE_ARGS += -Wall # Enable all warnings
 COMPILE_ARGS += -DICARUS # Define ICARUS macro
+COMPILE_ARGS += -DSIMULATION # Define ICARUS macro
 VERILOG_SOURCES += $(COCOTB_REDUCED_LOG_FMT)
 PLUSARGS += +dumpfile=sim_build/waves.vcd
 # PLUSARGS += +dumpvars=0,dut
-PLUSARGS += +dumpvars=0,tb_fifo.dut
+# PLUSARGS += +dumpvars=0,tb_fifo.dut
 else
 EXTRA_ARGS += --coverage
 SIM_ARGS += --trace --trace-structs

@@ -66,7 +66,7 @@ module scrambler #(
     if (rst_i) begin
       lfsr_out_constructed <= DATA_WIDTH'(0);
     end else begin
-      lfsr_out_constructed <= {lfsr_out_constructed[DATA_WIDTH:1], lfsr_out};
+      lfsr_out_constructed <= {lfsr_out_constructed[DATA_WIDTH-1:1], lfsr_out};
     end
   end
 

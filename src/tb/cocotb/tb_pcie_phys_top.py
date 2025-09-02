@@ -23,7 +23,7 @@ class PCIe:
         await Timer(20, units='ns')
 
 
-@cocotb.test(timeout_time=10, timeout_unit="us")
+@cocotb.test(timeout_time=1, timeout_unit="ms")
 async def test_pcie_phys_top(dut):
     '''
     Test of PCIe Top Module
@@ -31,10 +31,11 @@ async def test_pcie_phys_top(dut):
     test_pass = 1
     # Initialize the test
     pcie_inst = PCIe(dut)
-    await ClockCycles(dut.clk_i,1000)
-
+    await ClockCycles(dut.clk_i,100000)
+\
     # Write test here
 
+ 
     # End of Test code
     # await end_test(dut,test_pass)
 

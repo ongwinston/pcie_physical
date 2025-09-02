@@ -30,8 +30,8 @@ module multi_lane_controller #(
   // Wires
   //======================================================================================================
 
-  logic [DATA_WIDTH-1 : 0] scrambled_data [1:NUM_LANES];
-  logic scrambled_data_valid[1:NUM_LANES];
+  logic [DATA_WIDTH-1 : 0] scrambled_data [0:NUM_LANES-1];
+  logic scrambled_data_valid[0:NUM_LANES-1];
 
   //======================================================================================================
   // Scramblers
