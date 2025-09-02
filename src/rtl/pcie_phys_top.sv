@@ -28,6 +28,8 @@ module pcie_phys_top #(
   logic phy_lane_detected;
   logic [7:0] data_frame;
   logic [9:0] encoded_symbol;
+  logic en8b10b;
+  logic en128b130b;
 
   // TODO: Fix temp assigns
   assign data_frame = mac_data_frame_i[7:0];
@@ -74,6 +76,7 @@ module pcie_phys_top #(
     .rst_i               (rst_i),
     .lane_enable_i       (lane_en),
     .data_frame_i        (8'hf), // TODO
+    .data_frame_valid_i  (1'b1),
     .lane_symbol_o       (electrical_sub_out_symbol_o),
     .lane_symbol_valid_o ()
   );

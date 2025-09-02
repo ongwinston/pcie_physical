@@ -94,6 +94,10 @@ module pcie_controller #(
   //---------------------------------------------------------
   // State machine logic
   //---------------------------------------------------------
+
+  logic any_lane_detection;
+  assign any_lane_detection = |phy_layer_lane_detect_i;
+
   always_comb begin
     // Default assigns
     linkUp_d = 1'b0;
@@ -105,7 +109,7 @@ module pcie_controller #(
         controller_st_d = DETECT;
 
         // Enter polling when control_detect.active and phy_layer_lane_detect
-        if(control_detect_active && phy_layer_lane_detect_i) controller_st_d = POLLING;
+        if(control_detect_active && any_lane_detection) controller_st_d = POLLING;
       end
       POLLING: begin
         /* Transmitter sends TS1 OS with lane and link numbers set to PAD on all lanes
@@ -153,7 +157,7 @@ module pcie_controller #(
     .clk_i                   (clk_i),
     .rst_i                   (rst_i),
     .active_o                (control_detect_active),
-    .phy_layer_lane_detect_i (phy_layer_lane_detect_i)
+    .any_phy_lane_detect_i   (any_lane_detection)
   );
 
 

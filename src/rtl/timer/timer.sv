@@ -7,7 +7,7 @@
 
 `ifdef SIMULATION
   // If we are a simulation lets timeout early to save on sim time
-  `define TIMEOUT 32'h1000
+  `define TIMEOUT 32'h100
 `else
   `define TIMEOUT `TIMEOUT_2_400_000
 `endif
