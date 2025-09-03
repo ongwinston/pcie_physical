@@ -43,8 +43,6 @@ COMPILE_ARGS += -DICARUS # Define ICARUS macro
 COMPILE_ARGS += -DSIMULATION=1 # Define ICARUS macro
 VERILOG_SOURCES += $(COCOTB_REDUCED_LOG_FMT)
 PLUSARGS += +dumpfile=sim_build/waves.vcd
-# PLUSARGS += +dumpvars=0,dut
-# PLUSARGS += +dumpvars=0,tb_fifo.dut
 
 else # Verilator
 
