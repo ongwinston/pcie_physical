@@ -10,6 +10,7 @@ VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/capabilities_pkg.sv
 VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/ltssm_pkg.sv
 VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/multi_lane_controller.sv
 VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/controller/control_detect.sv
+VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/controller/control_polling.sv
 VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/controller/control_status_regs.sv
 VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/controller/pcie_controller.sv
 VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/encoders/disparity_checker.sv
