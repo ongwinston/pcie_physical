@@ -24,6 +24,13 @@ poetry run fusesoc --cores-root=.  --verbose  run --target=lint --setup --build 
 poetry run fusesoc --cores-root=.  --verbose  run --target=xilinx_sim --setup --build --run pcie:physical:top:0.1
 ```
 
+## How to run COCOTB simulation with verilator
+```sh
+cd src/tb/cocotb
+make clean sim
+```
+
+
 ## How to Run OpenLane / LibreLane Synthesis PnR Tools
 
 1) Open a nix-shell
