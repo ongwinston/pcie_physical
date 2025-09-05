@@ -30,6 +30,7 @@ module pcie_phys_top #(
   logic [9:0] encoded_symbol;
   logic en8b10b;
   logic en128b130b;
+  logic bypass_scrambler;
 
   // TODO: Fix temp assigns
   assign data_frame = mac_data_frame_i[7:0];
@@ -46,6 +47,8 @@ module pcie_phys_top #(
     .rst_i                   (rst_i),
 
     .phy_layer_lane_detect_i (electrical_sub_load_detect_i),
+
+    .bypass_scrambler_o      (bypass_scrambler),
 
     .en_8b10b_encoder_o      (en8b10b),
     .en_128b130b_encoder_o   (en128b130b)
@@ -77,6 +80,8 @@ module pcie_phys_top #(
     .lane_enable_i       (lane_en),
     .data_frame_i        (8'hf), // TODO
     .data_frame_valid_i  (1'b1),
+    .bypass_scrambler_i  (bypass_scrambler),
+
     .lane_symbol_o       (electrical_sub_out_symbol_o),
     .lane_symbol_valid_o ()
   );

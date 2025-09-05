@@ -21,6 +21,8 @@ module multi_lane_controller #(
     input logic [7:0]                   data_frame_i,
     input logic                         data_frame_valid_i,
 
+    input logic                         bypass_scrambler_i,
+
     // TX data to Physical Electrical layer
     output logic [NUM_LANES-1:0]        lane_symbol_o,
     output logic [NUM_LANES-1:0]        lane_symbol_valid_o
@@ -32,6 +34,12 @@ module multi_lane_controller #(
 
   logic [DATA_WIDTH-1 : 0] scrambled_data [0:NUM_LANES-1];
   logic scrambled_data_valid[0:NUM_LANES-1];
+
+  logic [7:0] data_scrambler_in;
+  logic       scrambler_in_valid;
+
+  assign data_scrambler_in = bypass_scrambler_i ? 8'h0 : data_frame_i;
+  assign scrambler_in_valid = bypass_scrambler_i ? 1'b0 : data_frame_valid_i;
 
   //======================================================================================================
   // Scramblers
@@ -46,8 +54,8 @@ module multi_lane_controller #(
       ) scrambler_inst (
         .clk_i                  (clk_i),
         .rst_i                  (rst_i),
-        .data_frame_i           (data_frame_i),
-        .data_frame_valid_i     (data_frame_valid_i),
+        .data_frame_i           (data_scrambler_in),
+        .data_frame_valid_i     (scrambler_in_valid),
         .scrambler_ready_o      (),
         .data_scrambled_o       (scrambled_data[i]),
         .data_scrambled_valid_o (scrambled_data_valid[i])
