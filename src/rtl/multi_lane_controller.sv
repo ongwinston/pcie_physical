@@ -41,6 +41,27 @@ module multi_lane_controller #(
   assign data_scrambler_in = bypass_scrambler_i ? 8'h0 : data_frame_i;
   assign scrambler_in_valid = bypass_scrambler_i ? 1'b0 : data_frame_valid_i;
 
+
+  //======================================================================================================
+  // Data packet striping
+  // 
+  //======================================================================================================
+
+  data_lane_striper #(
+
+  ) data_striper_inst (
+    .clk_i(clk_i),
+    .rst_i(rst_i),
+
+    .pre_striped_data_i(data_frame_i),
+    .pre_striped_data_valid_i(data_frame_valid_i),
+
+    // Out
+    .post_striped_data_o(),
+    .post_striped_data_valid_o()
+  );
+
+
   //======================================================================================================
   // Scramblers
   // Bypass scrambler for Ordered sets

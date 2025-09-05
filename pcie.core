@@ -9,6 +9,8 @@ filesets:
       - src/rtl/ltssm_pkg.sv
       - src/rtl/capabilities_pkg.sv
       - src/rtl/pcie_phys_top.sv
+      - src/rtl/packet_assembly.sv
+      - src/rtl/data_lane_striper.sv
       - src/rtl/multi_lane_controller.sv
       - src/rtl/scrambler/scrambler.sv
     file_type: systemVerilogSource
