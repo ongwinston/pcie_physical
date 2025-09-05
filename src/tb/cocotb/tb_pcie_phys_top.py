@@ -15,6 +15,8 @@ class PCIe:
         clock = Clock(dut.clk_i, 10, units="ns")  # Create a 10us period clock on port clk
         cocotb.start_soon(clock.start(start_high=False))
 
+        # Define number of lanes supported
+
 
     async def reset(self):
         self.dut.rst_i.value = 0
@@ -22,7 +24,7 @@ class PCIe:
         self.dut.rst_i.value = 1
         await Timer(20, units='ns')
 
-    async def en_load_lane(self):
+    async def simulate_load_on_lanes(self):
         await RisingEdge(self.dut.clk_i)
         self.dut.electrical_sub_load_detect_i.value = 0xf
 
@@ -42,7 +44,7 @@ async def test_pcie_phys_top(dut):
 
     # Write test here
 
-    await pcie_inst.en_load_lane()
+    await pcie_inst.simulate_load_on_lanes()
 
 
     await ClockCycles(dut.clk_i,10000)

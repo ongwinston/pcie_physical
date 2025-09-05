@@ -14,6 +14,9 @@ module pcie_controller #(
   // Physical Layer Electrical
   input  logic [NUM_LANES-1 : 0] phy_layer_lane_detect_i, // Electrical Receiver Detection Sequence
 
+
+  output logic bypass_scrambler_o, // TX bypasses scrambler and enters encoders
+
   output logic en_8b10b_encoder_o,
   output logic en_128b130b_encoder_o
 );
@@ -45,6 +48,10 @@ module pcie_controller #(
 
   // Polling Status
   logic control_polling_active;
+  logic polling_exit_detect;
+  logic polling_exit_configuration;
+
+  logic bypass_scrambler;
 
   //---------------------------------------------------------
   // link capabilities reg
@@ -99,10 +106,20 @@ module pcie_controller #(
 
 
   //---------------------------------------------------------
-  // State machine logic
+  // Control
   //---------------------------------------------------------
 
   assign any_lane_detected_load = |phy_layer_lane_detect_i;
+
+
+  /*
+   * Bypass scrambler when sending Ordered Sets and data rate is 2.5GT/s or 5.0GT/s
+   */
+  assign bypass_scrambler = 1'b1; // TODO
+
+  //---------------------------------------------------------
+  // State machine logic
+  //---------------------------------------------------------
 
   always_ff @(posedge clk_i or posedge rst_i) begin
     if(rst_i) begin
@@ -136,29 +153,10 @@ module pcie_controller #(
         /* Transmitter sends TS1 OS with lane and link numbers set to PAD on all lanes
         that detected a Receiver during Detect*/
 
-        // lanes_w_detected_load_d  (send TS1)
-          // - Data Rate Identifier symbol of the TS1 nust advertise all data rates that the port supports
-          // - Transmitter must wait for its TX common mode to settle before exiting from Electrical Idle and transmitting the
-
-        // TS1 OS 14-15 Symbols Long
-
-        // Polling.Active
-          // TS1 OS
-        
-
-
-        // Polling.Compliance
-
-
-        // Polling.Configuration
-
-
-        // Polling.Speed
-
-
         // Polling can enter Configuration or Detect or stay Polling
-        controller_st_d = POLLING;
-        // controller_st_d = CONFIGURATION;
+        if(polling_exit_detect) controller_st_d = DETECT;
+        else if (polling_exit_configuration) controller_st_d = CONFIGURATION;
+        else controller_st_d = POLLING;
       end
       CONFIGURATION: begin
         controller_st_d = RECOVERY;
@@ -206,9 +204,13 @@ module pcie_controller #(
   // Polling Sub State Machine
   //---------------------------------------------------------
   control_polling control_polling_inst (
-    .clk_i         (clk_i),
-    .rst_i         (rst_i),
-    .polling_en_i  (control_polling_active)
+    .clk_i                        (clk_i),
+    .rst_i                        (rst_i),
+    .polling_en_i                 (control_polling_active),
+    .link_cap_reg_i               (link_reg),
+    .lanes_w_detected_load_i      (lanes_w_detected_load_q),
+    .polling_exit_detect_o        (polling_exit_detect),
+    .polling_exit_configuration_o (polling_exit_configuration)
   );
 
 
@@ -221,5 +223,12 @@ module pcie_controller #(
       linkUp_q <= linkUp_d;
     end
   end
+
+
+  //---------------------------------------------------------
+  // Output assigns
+  //---------------------------------------------------------
+
+  assign bypass_scrambler_o = bypass_scrambler;
 
 endmodule
