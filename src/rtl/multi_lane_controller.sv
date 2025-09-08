@@ -22,6 +22,7 @@ module multi_lane_controller #(
     input logic                         data_frame_valid_i,
 
     input logic                         bypass_scrambler_i,
+    input logic                         is_ordered_set_i,
 
     // TX data to Physical Electrical layer
     output logic [NUM_LANES-1:0]        lane_symbol_o,
@@ -44,8 +45,12 @@ module multi_lane_controller #(
 
   //======================================================================================================
   // Data packet striping
-  // 
+  // Apply symbol striping on Data blocks (Framing Tokens, TLPs, DLLPs)
+  // Bypass Lane striping when TX is Ordered Set block, OS sends same symbols on all lanes
   //======================================================================================================
+  logic pre_striped_data_valid;
+
+  assign pre_striped_data_valid = is_ordered_set_i ? 1'b0 : data_frame_valid_i;
 
   data_lane_striper #(
 
@@ -54,7 +59,7 @@ module multi_lane_controller #(
     .rst_i(rst_i),
 
     .pre_striped_data_i(data_frame_i),
-    .pre_striped_data_valid_i(data_frame_valid_i),
+    .pre_striped_data_valid_i(pre_striped_data_valid),
 
     // Out
     .post_striped_data_o(),
@@ -64,7 +69,7 @@ module multi_lane_controller #(
 
   //======================================================================================================
   // Scramblers
-  // Bypass scrambler for Ordered sets
+  // Bypass scrambler for Ordered sets & K Symbols
   //======================================================================================================
 
   generate

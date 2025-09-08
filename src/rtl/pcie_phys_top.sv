@@ -31,6 +31,7 @@ module pcie_phys_top #(
   logic en8b10b;
   logic en128b130b;
   logic bypass_scrambler;
+  logic is_ordered_set;
 
   // TODO: Fix temp assigns
   assign data_frame = mac_data_frame_i[7:0];
@@ -49,6 +50,7 @@ module pcie_phys_top #(
     .phy_layer_lane_detect_i (electrical_sub_load_detect_i),
 
     .bypass_scrambler_o      (bypass_scrambler),
+    .is_ordered_set_o        (is_ordered_set),
 
     .en_8b10b_encoder_o      (en8b10b),
     .en_128b130b_encoder_o   (en128b130b)
@@ -94,6 +96,7 @@ module pcie_phys_top #(
     .data_frame_i        (8'hf), // TODO
     .data_frame_valid_i  (1'b1),
     .bypass_scrambler_i  (bypass_scrambler),
+    .is_ordered_set_i    (is_ordered_set),
 
     .lane_symbol_o       (electrical_sub_out_symbol_o),
     .lane_symbol_valid_o ()

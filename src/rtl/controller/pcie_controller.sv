@@ -7,18 +7,19 @@ module pcie_controller #(
   parameter int NUM_LANES = 1
 )
  (
-  input  logic clk_i,
-  input  logic rst_i,
+  input  logic                   clk_i,
+  input  logic                   rst_i,
 
 
   // Physical Layer Electrical
   input  logic [NUM_LANES-1 : 0] phy_layer_lane_detect_i, // Electrical Receiver Detection Sequence
 
 
-  output logic bypass_scrambler_o, // TX bypasses scrambler and enters encoders
+  output logic                   bypass_scrambler_o, // TX bypasses scrambler and enters encoders
+  output logic                   is_ordered_set_o,
 
-  output logic en_8b10b_encoder_o,
-  output logic en_128b130b_encoder_o
+  output logic                   en_8b10b_encoder_o,
+  output logic                   en_128b130b_encoder_o
 );
 
   import ltssm_pkg::*;
@@ -52,6 +53,7 @@ module pcie_controller #(
   logic polling_exit_configuration;
 
   logic bypass_scrambler;
+  logic is_ordered_set;
 
   //---------------------------------------------------------
   // link capabilities reg
@@ -230,5 +232,6 @@ module pcie_controller #(
   //---------------------------------------------------------
 
   assign bypass_scrambler_o = bypass_scrambler;
+  assign is_ordered_set_o = 1'b1; // TODO: fix
 
 endmodule
