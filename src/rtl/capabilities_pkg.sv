@@ -29,7 +29,7 @@ package capabilities_pkg;
    */
   typedef struct packed {
     logic        undefined;
-    logic [4:0] interrupt_message_num;
+    logic [4:0]  interrupt_message_num;
     logic        slot_implemented;
     logic [3:0]  device_port_type;
     logic [3:0]  version;

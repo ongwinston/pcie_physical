@@ -3,6 +3,9 @@
 //   `include "ltssm_pkg.svh"
 // `endif
 
+  import register_pkg::*;
+  // `include "register_pkg.sv"
+
 module pcie_controller #(
   parameter int NUM_LANES = 1
 )
@@ -13,6 +16,8 @@ module pcie_controller #(
 
   // Physical Layer Electrical
   input  logic [NUM_LANES-1 : 0] phy_layer_lane_detect_i, // Electrical Receiver Detection Sequence
+
+  output active_data_rate_e      active_data_rate_o,
 
 
   output logic                   bypass_scrambler_o, // TX bypasses scrambler and enters encoders
@@ -54,6 +59,8 @@ module pcie_controller #(
 
   logic bypass_scrambler;
   logic is_ordered_set;
+
+  active_data_rate_e active_data_rate;
 
   //---------------------------------------------------------
   // link capabilities reg
@@ -116,8 +123,18 @@ module pcie_controller #(
 
   /*
    * Bypass scrambler when sending Ordered Sets and data rate is 2.5GT/s or 5.0GT/s
+   * - Special K code symbols are not scrambled
+   * - 
+
+   * 8.0 GT/s and greater
+   *  - TS1/TS2 symbol 0 bypass scramble
+   *    - Symbol 14,15 bypass scramble if required for DC balance
+   *  - All 16 Symbols of Fast Training Set (FTS) Bypass scramble
+   *  - All 16 Symbols of a Start of Data Stream (SDS) bypass scramble
+   *  - All 16 Symbols of an Electrical Idle Ordered Set (EIOS) bypass scramble
+
    */
-  assign bypass_scrambler = 1'b1; // TODO
+  assign bypass_scrambler = 1'b0; // TODO
 
   //---------------------------------------------------------
   // State machine logic
@@ -140,7 +157,10 @@ module pcie_controller #(
     lanes_w_detected_load_d = lanes_w_detected_load_q;
     control_polling_active = 1'b0;
 
+    active_data_rate = ACTIVE_DATA_RATE_2_5_GT;
+
     case (controller_st_q)
+
       DETECT: begin
         controller_st_d = DETECT;
 
@@ -150,40 +170,55 @@ module pcie_controller #(
           lanes_w_detected_load_d = phy_layer_lane_detect_i;
         end
       end
+
       POLLING: begin
         control_polling_active = 1'b1;
+
         /* Transmitter sends TS1 OS with lane and link numbers set to PAD on all lanes
         that detected a Receiver during Detect*/
+        // Notify Packet Assembler to send TS1
 
-        // Polling can enter Configuration or Detect or stay Polling
+
+
+        /* Next States */
         if(polling_exit_detect) controller_st_d = DETECT;
         else if (polling_exit_configuration) controller_st_d = CONFIGURATION;
         else controller_st_d = POLLING;
       end
+
       CONFIGURATION: begin
         controller_st_d = RECOVERY;
       end
+
       RECOVERY: begin
         controller_st_d = L0;
       end
+
       L0: begin
+        linkUp_d = 1'b1;
         controller_st_d = L0S;
       end
+
       L0S: begin
         controller_st_d = L1;
       end
+
       L1: begin
         controller_st_d = L2;
       end
+
       L2: begin
         controller_st_d = DISABLED;
       end
+
       DISABLED: begin
         controller_st_d = LOOPBACK;
       end
+
       LOOPBACK: begin
         controller_st_d = LOOPBACK;
       end
+
       default: begin
         // controller_st_d = DETECT;
         // linkUp_d = 1'b0;
@@ -233,5 +268,6 @@ module pcie_controller #(
 
   assign bypass_scrambler_o = bypass_scrambler;
   assign is_ordered_set_o = 1'b1; // TODO: fix
+  assign active_data_rate_o = active_data_rate;
 
 endmodule

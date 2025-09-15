@@ -37,6 +37,11 @@ module pcie_phys_top #(
   assign data_frame = mac_data_frame_i[7:0];
   assign mac_data_frame_ready_o = 1'b1;
 
+  import register_pkg::*;
+
+  active_data_rate_e current_data_rate;
+
+
   //======================================================================================================
   // pcie_controller
   //======================================================================================================
@@ -49,6 +54,8 @@ module pcie_phys_top #(
 
     .phy_layer_lane_detect_i (electrical_sub_load_detect_i),
 
+    .active_data_rate_o      (current_data_rate),
+
     .bypass_scrambler_o      (bypass_scrambler),
     .is_ordered_set_o        (is_ordered_set),
 
@@ -58,16 +65,18 @@ module pcie_phys_top #(
 
 
   //======================================================================================================
-  // pcie_controller
+  // Packet Assembly - for Ordered Sets
   //======================================================================================================
 
   packet_assembly #(
 
   ) packet_assembly_unit (
-    .clk_i (clk_i),
-    .rst_i (rst_i),
-    .data_pkt_o(),
-    .data_pkt_valid_o()
+    .clk_i                         (clk_i),
+    .rst_i                         (rst_i),
+    .active_data_rate_i            (current_data_rate),
+    .controller_bypass_scrambler_i (),
+    .data_pkt_o                    (),
+    .data_pkt_valid_o              ()
   );
 
   //======================================================================================================

@@ -44,8 +44,12 @@ async def test_pcie_phys_top(dut):
 
     # Write test here
 
+    # Place an electrical load on the lanes to change our state from Detect to Polling
     await pcie_inst.simulate_load_on_lanes()
 
+
+    # Listen for TS1 Ordered Sets
+    
 
     await ClockCycles(dut.clk_i,10000)
  

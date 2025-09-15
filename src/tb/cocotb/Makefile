@@ -5,6 +5,7 @@ COCOTB_DIR = $(shell pwd)
 ROOT_DIR = $(COCOTB_DIR)/../../..
 
 #
+VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/register_pkg.sv
 VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/pcie_phys_top.sv
 VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/capabilities_pkg.sv
 VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/ltssm_pkg.sv
@@ -28,8 +29,6 @@ TOPLEVEL = pcie_phys_top
 MODULE = tb_pcie_phys_top
 
 
-
-
 # Makefile
 REPO_ROOT := $(shell git rev-parse --show-toplevel 2>/dev/null)
 
@@ -40,28 +39,33 @@ ICARUS ?= 0
 ifeq ($(ICARUS), 1)
 SIM := icarus
 WAVES := 1
-COMPILE_ARGS += -g2012 # Use SystemVerilog-2012 standard
+
+COMPILE_ARGS += -g2012
 # COMPILE_ARGS += -Wall # Enable all warnings
-COMPILE_ARGS += -DICARUS # Define ICARUS macro
-COMPILE_ARGS += -DSIMULATION=1 # Define ICARUS macro
+COMPILE_ARGS += -DICARUS
+COMPILE_ARGS += -DSIMULATION=1
+
 VERILOG_SOURCES += $(COCOTB_REDUCED_LOG_FMT)
 PLUSARGS += +dumpfile=sim_build/waves.vcd
 
 else # Verilator
 
+SIM := verilator
+
+
+SIM_ARGS +=
 EXTRA_ARGS += --coverage
-SIM_ARGS += --trace --trace-structs
-EXTRA_ARGS += --trace-fst --trace-structs
+EXTRA_ARGS += --trace --trace-fst --trace-structs --stats
 
 # Enable warnings
 # EXTRA_ARGS +=-Wall
 # EXTRA_ARGS +=-Wwarn-IMPERFECTSCH
 
-# Default to using Verilator
-SIM := verilator
-
 # COMPILE_ARGS += 
-COMPILE_ARGS += -DSIMULATION=1 # Define ICARUS macro
+COMPILE_ARGS += -DSIMULATION=1
+
+# Uncomment to enable Verilator checks with Assertions
+# COMPILE_ARGS += -DASSERTIONS_ENABLED=1
 
 endif
 

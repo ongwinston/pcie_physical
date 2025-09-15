@@ -6,6 +6,7 @@ description: "Implementation of Physical Logical layer PCI Express Base Specific
 filesets:
   files_rtl:
     files:
+      - src/rtl/register_pkg.sv
       - src/rtl/ltssm_pkg.sv
       - src/rtl/capabilities_pkg.sv
       - src/rtl/pcie_phys_top.sv
@@ -44,6 +45,7 @@ targets:
           - '-v2'
           - '-d SIMULATOR_ICARUS=1'
           - '-d SIMULATION=1'
+          - '-i src/rtl'
 
   lint:
     default_tool : verilator
