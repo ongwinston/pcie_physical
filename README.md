@@ -4,6 +4,8 @@
 Implementation of Physical Logical layer PCI Express Base Specification Revision 5.0 Version 1.0
 
 
+![pcie_physcal](doc/pcie_physical.drawio.png "pcie_physical diagram")
+
 # Simulator choice
 - Xilinx Simulator
 - Verilator
