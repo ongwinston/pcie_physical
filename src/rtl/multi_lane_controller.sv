@@ -25,6 +25,7 @@ module multi_lane_controller #(
     input logic                         is_ordered_set_i,
 
     // TX data to Physical Electrical layer
+    input logic                         tx_analog_clk_i,
     output logic [NUM_LANES-1:0]        lane_symbol_o,
     output logic [NUM_LANES-1:0]        lane_symbol_valid_o
 );
@@ -103,6 +104,27 @@ module multi_lane_controller #(
       );
     end
   endgenerate
+
+  //======================================================================================================
+  // Serializer
+  // - Datawidth 10b or 130b
+  //======================================================================================================
+
+  generate
+    for(genvar i=0; i < NUM_LANES; i++) begin : gen_serializers
+      serializer #(
+        .DATA_WIDTH(10)
+      ) serializer_inst (
+        .clk_i (clk_i),
+        .rst_i (rst_i),
+        .symbol_data_i(),
+        .analag_tx_clk_i(tx_analog_clk_i),
+        .symbol_bit_o(),
+        .symbol_bit_valid_o()
+      );
+    end
+  endgenerate
+
   //======================================================================================================
   // Assigns
   //======================================================================================================

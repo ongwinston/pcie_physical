@@ -98,6 +98,7 @@ module pcie_phys_top #(
     .bypass_scrambler_i  (bypass_scrambler),
     .is_ordered_set_i    (is_ordered_set),
 
+    .tx_analog_clk_i     (),
     .lane_symbol_o       (electrical_sub_out_symbol_o),
     .lane_symbol_valid_o ()
   );
