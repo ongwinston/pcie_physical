@@ -118,7 +118,7 @@ module multi_lane_controller #(
         .clk_i (clk_i),
         .rst_i (rst_i),
         .symbol_data_i(),
-        .analag_tx_clk_i(tx_analog_clk_i),
+        .analog_tx_clk_i(tx_analog_clk_i),
         .symbol_bit_o(),
         .symbol_bit_valid_o()
       );
