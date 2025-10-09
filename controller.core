@@ -34,7 +34,6 @@ targets:
       xsim:
         xelab_options:
           - '-v2'
-          - '-d SIMULATOR_ICARUS=1'
           - '-d SIMULATION=1'
 
   lint:

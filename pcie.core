@@ -18,6 +18,8 @@ filesets:
       - pcie:physical:controller:0.1
       - pcie:physical:lfsr:0.1
       - pcie:physical:encoders:0.1
+      - pcie:physical:fifo:0.1
+      - pcie:physical:serializer:0.1
     file_type: systemVerilogSource
 
   files_tb:

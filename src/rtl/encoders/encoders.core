@@ -54,10 +54,6 @@ targets:
       xsim:
         xelab_options:
           - '-v2'
-          - '-d SIMULATOR_ICARUS=1'
-#        xsim_options:
-         #- '--gui'
-         #- '--view'
 
 
 

@@ -27,5 +27,4 @@ targets:
       icarus:
         iverilog_options:
           - -g2012
-          - -D SIMULATOR_ICARUS=1
 
