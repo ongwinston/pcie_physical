@@ -1,0 +1,13 @@
+ CAPI=2:
+ name : "pcie:physical:bin_to_gray:0.1"
+
+ filesets:
+   bin_to_gray:
+    files:
+      - bin_to_gray.sv
+    file_type : systemVerilogSource
+
+ targets:
+   default:
+     filesets:
+      - bin_to_gray

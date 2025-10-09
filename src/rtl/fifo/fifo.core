@@ -1,0 +1,23 @@
+CAPI=2:
+name : "pcie:physical:fifo:0.1"
+
+filesets:
+  rtl:
+    files:
+      - fifo.sv
+    file_type : systemVerilogSource
+    depend:
+     - pcie:physical:bin_to_gray:0.1
+
+#   tb_files:
+#     files: {.sv : {file_type : systemVerilogSource}}
+#     depend: []
+
+targets:
+  default:
+    filesets:
+      - rtl
+
+  sim:
+    filesets
+      - rtl
