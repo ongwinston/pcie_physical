@@ -15,6 +15,9 @@ class PCIe:
         clock = Clock(dut.clk_i, 10, units="ns")  # Create a 10us period clock on port clk
         cocotb.start_soon(clock.start(start_high=False))
 
+        pll_tx_clk = Clock(dut.clk_i, 1, units="ns")
+        cocotb.start_soon(pll_tx_clk.start(start_high=False))
+
         # Define number of lanes supported
 
 
