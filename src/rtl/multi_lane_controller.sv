@@ -8,7 +8,7 @@
     - TL Packets (TLP)
 
 
-  --> Scrambler (xN) --> Encoder 8b10b --> Serialiser --> lane_bit_o
+  --> Scrambler (xN) --> Encoder 8b10b --> Serializer --> lane_bit_o
 */
 
 module multi_lane_controller #(
@@ -30,12 +30,16 @@ module multi_lane_controller #(
     output logic [NUM_LANES-1:0]        lane_symbol_valid_o
 );
 
+  localparam SYMBOL_WIDTH = 10;
+
   //======================================================================================================
   // Wires
   //======================================================================================================
 
-  logic [DATA_WIDTH-1 : 0] scrambled_data [0:NUM_LANES-1];
-  logic scrambled_data_valid[0:NUM_LANES-1];
+  logic [DATA_WIDTH-1 : 0] scrambled_data [0 : NUM_LANES-1];
+  logic scrambled_data_valid[0 : NUM_LANES-1];
+
+  logic [SYMBOL_WIDTH-1 : 0] encoded_symbols[0 : NUM_LANES-1];
 
   logic [7:0] data_scrambler_in;
   logic       scrambler_in_valid;
@@ -98,8 +102,8 @@ module multi_lane_controller #(
       encoder_8b10b dut_encoder_8b10b (
         .clk_i                  (clk_i),
         .rst_i                  (rst_i),
-        .data_i                 (),
-        .encoded_8b10b_symbol_o (),
+        .data_i                 (scrambled_data[i]),
+        .encoded_8b10b_symbol_o (encoded_symbols[i]),
         .is_special_k_i         (1'b0)
       );
     end
@@ -117,10 +121,11 @@ module multi_lane_controller #(
       ) serializer_inst (
         .clk_i (clk_i),
         .rst_i (rst_i),
-        .symbol_data_i(),
+        .symbol_data_i(encoded_symbols[i]),
+        .symbol_valid_i(1'b1), //TODO
         .analog_tx_clk_i(tx_analog_clk_i),
-        .symbol_bit_o(),
-        .symbol_bit_valid_o()
+        .symbol_bit_o(lane_symbol_o[i]),
+        .symbol_bit_valid_o(lane_symbol_valid_o[i])
       );
     end
   endgenerate

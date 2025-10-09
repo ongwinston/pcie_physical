@@ -22,6 +22,9 @@ VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/encoders/encoder_8b10b.sv
 VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/linear-feedback-shift-register/linear_feedback_shift_reg.sv
 VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/scrambler/scrambler.sv
 VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/timer/timer.sv
+VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/bin_to_gray/bin_to_gray.sv
+VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/fifo/fifo.sv
+VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/serializer/serializer.sv
 
 
 TOPLEVEL = pcie_phys_top

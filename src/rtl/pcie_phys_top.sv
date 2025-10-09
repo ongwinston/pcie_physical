@@ -14,6 +14,7 @@ module pcie_phys_top #(
 
   // Electrical RX
   input logic [NUM_LANES-1 : 0]     electrical_sub_load_detect_i, // Electrical sub block load indicator
+  input logic                       pll_tx_clk,
 
   // Symbols out to Electrical Lanes
   output logic [NUM_LANES-1 : 0]    electrical_sub_out_symbol_o // Electrical sub block serilised bits out
@@ -98,7 +99,7 @@ module pcie_phys_top #(
     .bypass_scrambler_i  (bypass_scrambler),
     .is_ordered_set_i    (is_ordered_set),
 
-    .tx_analog_clk_i     (),
+    .tx_analog_clk_i     (pll_tx_clk),
     .lane_symbol_o       (electrical_sub_out_symbol_o),
     .lane_symbol_valid_o ()
   );
