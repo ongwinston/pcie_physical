@@ -6,8 +6,8 @@ description: "Implementation of Physical Logical layer PCI Express Base Specific
 filesets:
   files_rtl:
     files:
-      - src/rtl/ltssm_pkg.sv
-      - src/rtl/capabilities_pkg.sv
+      #- src/rtl/ltssm_pkg.sv
+      #- src/rtl/capabilities_pkg.sv
       - src/rtl/pcie_phys_top.sv
       - src/rtl/packet_assembly.sv
       - src/rtl/data_lane_striper.sv
@@ -27,6 +27,11 @@ filesets:
       - src/tb/tb_pcie_physical.sv
       - src/tb/tb_clocking_block.sv
     file_type: systemVerilogSource
+
+  files_tb_cocotb:
+    files:
+      - src/tb/cocotb/tb_pcie_phys_top.py : {file_type : user , copyto : .}
+    depend : [vlog_tb_utils]
 
 
 targets:
@@ -59,3 +64,28 @@ targets:
           - '--no-timing'
           - '-Wall'
     toplevel : tb_pcie_physical
+
+  cocosim:
+    flow: sim
+    flow_options:
+      tool : verilator
+      cocotb_module : tb_pcie_phys_top
+      timescale: 1ns/1ns
+      vcs_options: [-timescale=1ns/1ns]
+    filesets :
+      - files_rtl
+      - files_tb_cocotb
+    parameters : [MAC_FRAME_WIDTH=32, NUM_LANES=4]
+    toplevel : pcie_phys_top
+
+parameters:
+
+  MAC_FRAME_WIDTH:
+    datatype : int
+    paramtype : vlogparam
+
+
+  NUM_LANES:
+    datatype : int
+    paramtype : vlogparam
+

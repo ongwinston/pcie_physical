@@ -8,7 +8,9 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.11,<4"
 dependencies = [
-    "fusesoc (>=2.4.3,<3.0.0)"
+    "fusesoc (>=2.4.3,<3.0.0)",
+    "cocotb (>=2.0.0,<3.0.0)",
+    "numpy (>=2.3.3,<3.0.0)"
 ]
 
 
