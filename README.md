@@ -47,3 +47,14 @@ librelane librelane_config.json --overwrite
 ## How to Run Vivado Synth
 ```sh
 ```
+
+## How to run CocoTB with fusesoc
+1) Setup the environment for poetry and cocotb
+```sh
+source env-setup.sh
+```
+
+2) run the test
+```sh
+ poetry run fusesoc --cores-root=. --verbose run --target=cocosim  --setup --build --run pcie:physical:top:0.1 --vcd
+```
