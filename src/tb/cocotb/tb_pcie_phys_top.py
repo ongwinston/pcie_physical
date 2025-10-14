@@ -4,18 +4,19 @@ import math
 import cocotb
 import numpy
 from cocotb.clock import Clock
-from cocotb.triggers import RisingEdge, FallingEdge, Join, ClockCycles, Timer
+from cocotb.triggers import RisingEdge, FallingEdge, ClockCycles, Timer
 from cocotb.types import LogicArray
+from cocotb.task import Join
 
 # from helper_functions import get_elements, wait_n_clock_cycles, init_test, end_test
 
 class PCIe:
     def __init__(self, dut):
         self.dut = dut
-        clock = Clock(dut.clk_i, 10, units="ns")  # Create a 10us period clock on port clk
+        clock = Clock(dut.clk_i, 10, unit="ns")  # Create a 10us period clock on port clk
         cocotb.start_soon(clock.start(start_high=False))
 
-        pll_tx_clk = Clock(dut.clk_i, 1, units="ns")
+        pll_tx_clk = Clock(dut.clk_i, 1, unit="ns")
         cocotb.start_soon(pll_tx_clk.start(start_high=False))
 
         # Define number of lanes supported
@@ -23,9 +24,9 @@ class PCIe:
 
     async def reset(self):
         self.dut.rst_i.value = 0
-        await Timer(20, units='ns')
+        await Timer(20, unit='ns')
         self.dut.rst_i.value = 1
-        await Timer(20, units='ns')
+        await Timer(20, unit='ns')
 
     async def simulate_load_on_lanes(self):
         await RisingEdge(self.dut.clk_i)
