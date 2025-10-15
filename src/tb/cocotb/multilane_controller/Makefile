@@ -2,7 +2,7 @@
 
 #
 COCOTB_DIR = $(shell pwd)
-ROOT_DIR = $(COCOTB_DIR)/../../..
+ROOT_DIR = $(COCOTB_DIR)/../../../..
 
 #
 VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/pcie_phys_top.sv
@@ -27,8 +27,8 @@ VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/fifo/fifo.sv
 VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/serializer/serializer.sv
 
 
-TOPLEVEL = pcie_phys_top
-MODULE = tb_pcie_phys_top
+TOPLEVEL = multi_lane_controller
+MODULE = tb_multilane_controller
 
 
 

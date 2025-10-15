@@ -1,0 +1,5 @@
+#ignore verilator cocotb build output
+sim_build/
+results.xml
+coverage.dat
+dump.fst
