@@ -2,7 +2,10 @@
 
 module pcie_phys_top #(
   parameter int MAC_FRAME_WIDTH = 32,
-  parameter int NUM_LANES = 4
+  parameter int NUM_LANES = 4,
+  parameter DW = 8,
+  parameter MSG_LEN = 2,
+  parameter MSG_STR = "aa"
 ) (
   input logic                       clk_i,
   input logic                       rst_i,
@@ -20,6 +23,14 @@ module pcie_phys_top #(
   output logic [NUM_LANES-1 : 0]    electrical_sub_out_symbol_o // Electrical sub block serilised bits out
 
 );
+
+  //======================================================================================================
+  // SIMULATION
+  //======================================================================================================
+
+  // `ifndef VERILATOR
+    // vlog_tb_utils vtu();
+  // `endif
 
 
   //======================================================================================================

@@ -69,13 +69,16 @@ targets:
     flow: sim
     flow_options:
       tool : verilator
+      verilator_options:
+        - --trace-structs
+        - --trace-fst
       cocotb_module : tb_pcie_phys_top
       timescale: 1ns/1ns
       vcs_options: [-timescale=1ns/1ns]
     filesets :
       - files_rtl
       - files_tb_cocotb
-    parameters : [MAC_FRAME_WIDTH=32, NUM_LANES=4]
+    parameters : [MAC_FRAME_WIDTH=32, NUM_LANES=4, DW=8, MSG_LEN=17, MSG_STR=amessagetoyourudy]
     toplevel : pcie_phys_top
 
 parameters:
@@ -89,3 +92,14 @@ parameters:
     datatype : int
     paramtype : vlogparam
 
+  DW:
+    datatype : int
+    paramtype : vlogparam
+
+  MSG_LEN:
+    datatype : int
+    paramtype : vlogparam
+
+  MSG_STR:
+    datatype : str
+    paramtype : vlogparam
