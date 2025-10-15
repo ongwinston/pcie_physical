@@ -2,7 +2,7 @@
 
 #
 COCOTB_DIR = $(shell pwd)
-ROOT_DIR = $(COCOTB_DIR)/../../..
+ROOT_DIR = $(COCOTB_DIR)/../../../..
 
 #
 VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/register_pkg.sv
