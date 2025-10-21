@@ -25,6 +25,7 @@ VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/timer/timer.sv
 VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/bin_to_gray/bin_to_gray.sv
 VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/fifo/fifo.sv
 VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/serializer/serializer.sv
+VERILOG_SOURCES += $(ROOT_DIR)/src/rtl/unary_to_binary/unary_to_binary.sv
 
 
 TOPLEVEL = multi_lane_controller
