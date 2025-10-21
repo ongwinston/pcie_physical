@@ -11,16 +11,10 @@ filesets:
       #- src/rtl/capabilities_pkg.sv
       - src/rtl/pcie_phys_top.sv
       - src/rtl/packet_assembly.sv
-      - src/rtl/data_lane_striper.sv
-      - src/rtl/multi_lane_controller.sv
-      - src/rtl/scrambler/scrambler.sv
     file_type: systemVerilogSource
     depend:
       - pcie:physical:controller:0.1
-      - pcie:physical:lfsr:0.1
-      - pcie:physical:encoders:0.1
-      - pcie:physical:fifo:0.1
-      - pcie:physical:serializer:0.1
+      - pcie:physical:multilane:0.1
     file_type: systemVerilogSource
 
   files_tb:
