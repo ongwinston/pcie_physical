@@ -12,12 +12,12 @@
 */
 
 module multi_lane_controller #(
-  parameter int NUM_LANES = 4,
+  parameter int NUM_LANES = 16,
   parameter int DATA_WIDTH = 8
 ) (
     input logic                         clk_i,
     input logic                         rst_i,
-    input logic [NUM_LANES-1:0]         lane_enable_i, // Lane Enable signal from the controller, with a load
+    input logic                         lane_enable_i [NUM_LANES], // Lane Enable signal from the controller, with a load
     input logic [7:0]                   data_frame_i,
     input logic                         data_frame_valid_i,
 
@@ -36,13 +36,18 @@ module multi_lane_controller #(
   // Wires
   //======================================================================================================
 
-  logic [DATA_WIDTH-1 : 0] scrambled_data [0 : NUM_LANES-1];
-  logic scrambled_data_valid[0 : NUM_LANES-1];
+  logic [DATA_WIDTH-1: 0]    post_stripe_lane_data [NUM_LANES];
+  logic                      post_stripe_lane_data_valid [NUM_LANES];
 
-  logic [SYMBOL_WIDTH-1 : 0] encoded_symbols[0 : NUM_LANES-1];
+  logic [DATA_WIDTH-1 : 0]   scrambled_data [NUM_LANES];
+  logic                      scrambled_data_valid[NUM_LANES];
 
-  logic [7:0] data_scrambler_in;
-  logic       scrambler_in_valid;
+  logic [SYMBOL_WIDTH-1 : 0] encoded_symbols[NUM_LANES];
+
+  logic [7:0]                data_scrambler_in;
+  logic                      scrambler_in_valid;
+
+  logic                      stripe_data_go;
 
   assign data_scrambler_in = bypass_scrambler_i ? 8'h0 : data_frame_i;
   assign scrambler_in_valid = bypass_scrambler_i ? 1'b0 : data_frame_valid_i;
@@ -58,17 +63,22 @@ module multi_lane_controller #(
   assign pre_striped_data_valid = is_ordered_set_i ? 1'b0 : data_frame_valid_i;
 
   data_lane_striper #(
-
+    .NUM_LANES(NUM_LANES),
+    .DATA_WIDTH(DATA_WIDTH)
   ) data_striper_inst (
-    .clk_i(clk_i),
-    .rst_i(rst_i),
+    .clk_i                     (clk_i),
+    .rst_i                     (rst_i),
 
-    .pre_striped_data_i(data_frame_i),
-    .pre_striped_data_valid_i(pre_striped_data_valid),
+    .pre_striped_data_i        (data_frame_i),
+    .pre_striped_data_valid_i  (pre_striped_data_valid),
+    .pre_striped_data_ready_o  (),
+
+    .num_lanes_enabled_i       (lane_enable_i),
 
     // Out
-    .post_striped_data_o(),
-    .post_striped_data_valid_o()
+    .post_striped_data_o       (post_stripe_lane_data),
+    .post_striped_data_valid_o (post_stripe_lane_data_valid),
+    .stripe_tx_go_o            (stripe_data_go)
   );
 
 
@@ -122,7 +132,7 @@ module multi_lane_controller #(
         .clk_i (clk_i),
         .rst_i (rst_i),
         .symbol_data_i(encoded_symbols[i]),
-        .symbol_valid_i(1'b1), //TODO
+        .symbol_valid_i(1'b0), //TODO
         .analog_tx_clk_i(tx_analog_clk_i),
         .symbol_bit_o(lane_symbol_o[i]),
         .symbol_bit_valid_o(lane_symbol_valid_o[i])

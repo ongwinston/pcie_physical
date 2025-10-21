@@ -23,13 +23,15 @@ class MultilaneController:
 
 
     async def reset(self):
-        self.dut.rst_i.value = 0
-        await Timer(20, unit='ns')
         self.dut.rst_i.value = 1
         await Timer(20, unit='ns')
+        self.dut.rst_i.value = 0
+        await Timer(20, unit='ns')
 
-    async def lane_enable(self):
-        self.dut.lane_enable_i.value = 1
+    async def lane_enable(self, enables):
+        # self.dut.lane_enable_i.value = enables
+        for i in range(enables):
+            self.dut.lane_enable_i[i].value = 1
     
     async def push_data(self, data):
         self.dut.data_frame_i.value = data
@@ -57,6 +59,8 @@ async def test_multilane_controller_simple(dut):
     # Initialize the test
     multilane_inst = MultilaneController(dut)
 
+    await multilane_inst.reset()
+
 
     await ClockCycles(dut.clk_i,100)
 
@@ -66,8 +70,21 @@ async def test_multilane_controller_simple(dut):
 
     await ClockCycles(dut.clk_i,5)
 
+
+    #
+    # Lets test two enabled lanes,
+    # - push two valid data samples into the controller
+    # - Should expect this to then be launched to the SERDES
+
+    # Enable the lanes (x2)
+    num_enabled_lanes = 4
+    await multilane_inst.lane_enable(num_enabled_lanes)
+
+
     # Push data
-    await multilane_inst.push_data(0xf)
+    for _ in range(num_enabled_lanes):
+        await multilane_inst.push_data(random.getrandbits(8))
+    
 
     await ClockCycles(dut.clk_i, 20)
 

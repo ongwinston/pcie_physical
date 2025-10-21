@@ -1,0 +1,102 @@
+CAPI=2:
+name: "pcie:physical:multilane:0.1"
+description: "Multilane controller core encompassing SERDES logic"
+
+
+filesets:
+  files_rtl:
+    files:
+      - src/rtl/data_lane_striper.sv
+      - src/rtl/multi_lane_controller.sv
+      - src/rtl/scrambler/scrambler.sv
+      - src/rtl/unary_to_binary/unary_to_binary.sv
+    file_type: systemVerilogSource
+    depend:
+      - pcie:physical:controller:0.1
+      - pcie:physical:lfsr:0.1
+      - pcie:physical:encoders:0.1
+      - pcie:physical:fifo:0.1
+      - pcie:physical:serializer:0.1
+    file_type: systemVerilogSource
+
+#  files_tb:
+#    files:
+#      - src/tb/tb_pcie_physical.sv
+#      - src/tb/tb_clocking_block.sv
+#    file_type: systemVerilogSource
+
+#  files_tb_cocotb:
+#    files:
+#      - src/tb/cocotb/tb_pcie_phys_top.py : {file_type : user , copyto : .}
+#    depend : [vlog_tb_utils]
+
+
+targets:
+  default: &default_target
+    filesets:
+      - files_rtl
+
+  xilinx_sim:
+    <<: *default_target
+    default_tool: xsim
+    filesets_append:
+#      - files_tb
+    toplevel: tb_multilane
+    tools:
+      xsim:
+        xelab_options:
+          - '-v2'
+          - '-d SIMULATOR_ICARUS=1'
+          - '-d SIMULATION=1'
+
+  lint:
+    default_tool : verilator
+    filesets : [files_rtl]
+    filesets_append:
+#      - files_tb
+    tools:
+      verilator:
+        mode : lint-only
+        verilator_options:
+          - '--no-timing'
+          - '-Wall'
+    toplevel : tb_multilane
+
+  cocosim:
+    flow: sim
+    flow_options:
+      tool : verilator
+      verilator_options:
+        - --trace-structs
+        - --trace-fst
+      cocotb_module : tb_multilane
+      timescale: 1ns/1ns
+      vcs_options: [-timescale=1ns/1ns]
+    filesets :
+      - files_rtl
+#      - files_tb_cocotb
+    parameters : [MAC_FRAME_WIDTH=32, NUM_LANES=4, DW=8, MSG_LEN=17, MSG_STR=amessagetoyourudy]
+    toplevel : multi_lane_controller
+
+parameters:
+
+  MAC_FRAME_WIDTH:
+    datatype : int
+    paramtype : vlogparam
+
+
+  NUM_LANES:
+    datatype : int
+    paramtype : vlogparam
+
+  DW:
+    datatype : int
+    paramtype : vlogparam
+
+  MSG_LEN:
+    datatype : int
+    paramtype : vlogparam
+
+  MSG_STR:
+    datatype : str
+    paramtype : vlogparam
