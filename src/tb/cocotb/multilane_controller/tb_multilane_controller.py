@@ -82,7 +82,7 @@ async def test_multilane_controller_simple(dut):
 
 
     # Push data
-    for _ in range(num_enabled_lanes):
+    for _ in range(num_enabled_lanes*3):
         await multilane_inst.push_data(random.getrandbits(8))
     
 
