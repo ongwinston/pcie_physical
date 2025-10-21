@@ -93,9 +93,13 @@ module pcie_phys_top #(
      - Instantiate Encoders per lane
   */
 
-  // TODO
-  logic [NUM_LANES-1: 0] lane_en; // Enable lanes from the Controller detection of lane load
-  assign lane_en = 4'd7; // Enable all lanes
+  logic  lane_en [NUM_LANES]; // Enable lanes from the Controller detection of lane load
+
+  generate
+    for(genvar i=0; i<NUM_LANES; i = i+1) begin : gen_lane_assigns
+      assign lane_en[i] = 1'b1;
+    end
+  endgenerate
 
   multi_lane_controller #(
     .NUM_LANES(NUM_LANES)
