@@ -1,37 +1,12 @@
+# Makefile
+REPO_ROOT := $(shell git rev-parse --show-toplevel 2>/dev/null)
 
-# Makefile template
+TOPLEVEL = serializer
+COCOTB_TEST_MODULES = tb_serializer
 
-# Define the variable FIFO to be excluded from the filelist.mk
-FIFO_INCLUDED = 1
+include $(REPO_ROOT)/src/tb/cocotb/Makefile
 
 WAVEVIEWER = surfer
-
-VERILOG_SOURCES += $(shell pwd)/serializer.sv
-VERILOG_SOURCES += $(shell pwd)/../fifo/fifo.sv
-VERILOG_SOURCES += $(shell pwd)/../bin_to_gray/bin_to_gray.sv
-TOPLEVEL = serializer
-MODULE = tb_serializer
-
-# Makefile
-# include  $(shell pwd)/../Makefile
-
-EXTRA_ARGS += --coverage
-SIM_ARGS += --trace --trace-structs
-EXTRA_ARGS += --trace-fst --trace-structs
-
-# Enable warnings
-EXTRA_ARGS +=-Wall
-EXTRA_ARGS +=-Wwarn-IMPERFECTSCH
-
-# Default to using Verilator
-SIM = verilator
-
-# Adding python path
-export PYTHONPATH=/home/winston/Projects/Digital-IC/pcie_physical
-
-# Include the Cocotb Library
-include $(shell cocotb-config --makefiles)/Makefile.sim
-
 
 # List available targets
 options:

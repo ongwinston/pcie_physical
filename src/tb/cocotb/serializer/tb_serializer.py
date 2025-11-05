@@ -4,9 +4,10 @@ import math
 import cocotb
 import numpy
 from cocotb.clock import Clock
-from cocotb.triggers import RisingEdge, FallingEdge, Join, ClockCycles, Timer
+from cocotb.triggers import RisingEdge, FallingEdge, ClockCycles, Timer
 from cocotb.types import LogicArray
 from cocotb.queue import Queue
+from cocotb.task import Join
 
 async def reverse_bits(bits):
     '''
@@ -77,8 +78,8 @@ async def test_simple(dut):
     '''
 
     # Clock period 10ns = 100Mhz
-    clock = Clock(dut.clk_i, 10, units="ns")
-    tx_clk = Clock(dut.analog_tx_clk_i, 1, units="ns")
+    clock = Clock(dut.clk_i, 10, unit="ns")
+    tx_clk = Clock(dut.analog_tx_clk_i, 1, unit="ns")
     cocotb.start_soon(clock.start())
     cocotb.start_soon(tx_clk.start())
 
