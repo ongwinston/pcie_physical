@@ -1,8 +1,12 @@
-
-#
-VERILOG_SOURCES += $(REPO_ROOT)/src/rtl/pcie_phys_top.sv
+# Packages
 VERILOG_SOURCES += $(REPO_ROOT)/src/rtl/capabilities_pkg.sv
 VERILOG_SOURCES += $(REPO_ROOT)/src/rtl/ltssm_pkg.sv
+VERILOG_SOURCES += $(REPO_ROOT)/src/rtl/register_pkg.sv
+
+# Top
+VERILOG_SOURCES += $(REPO_ROOT)/src/rtl/pcie_phys_top.sv
+
+# Modules
 VERILOG_SOURCES += $(REPO_ROOT)/src/rtl/multi_lane_controller.sv
 VERILOG_SOURCES += $(REPO_ROOT)/src/rtl/packet_assembly.sv
 VERILOG_SOURCES += $(REPO_ROOT)/src/rtl/data_lane_striper.sv
