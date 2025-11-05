@@ -47,13 +47,6 @@ module data_lane_striper #(
   logic                              stripe_tx_go;
   logic                              lane_buffer_empty_r;
 
-  typedef enum  logic [2:0] {
-    IDLE,
-    PACKING,
-    TX_SEND
-  } stripe_fsm_e;
-
-  stripe_fsm_e state_d, state_q;
 
   //------------------------------------------------------------------
   // Logic
